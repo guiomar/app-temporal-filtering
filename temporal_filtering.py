@@ -32,7 +32,7 @@ def temporal_filtering(raw, param_filter_l_freq, param_filter_h_freq, param_filt
 	                              phase=param_notch_phase, fir_window=param_notch_fir_window, fir_design=param_notch_fir_design, pad=param_notch_pad)
 
     if param_apply_resample is True:
-        raw_filtered.resample(param_resample_sfreq=sfreq, npad=param_resample_npad, window=param_resample_window, stim_picks=param_resample_stim_picks,
+        raw_filtered.resample(sfreq=param_resample_sfreq, npad=param_resample_npad, window=param_resample_window, stim_picks=param_resample_stim_picks,
 	                          n_jobs=param_resample_n_jobs, events=param_resample_events, pad=param_resample_pad)
 
     # Save file
