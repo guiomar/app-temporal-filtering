@@ -4,6 +4,6 @@
     "param_notch_frequencies": 50,
     "param_filter_l_freq": 0.5,
     "param_filter_h_freq": 100,
-    "param_resample": true,
+    "param_apply_resample": true,
     "param_sfreq": 256
 }
