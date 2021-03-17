@@ -16,13 +16,18 @@ def temporal_filtering(raw, param_filter_l_freq, param_filter_h_freq, param_filt
 
 
     raw.load_data()
-    raw_filtered = raw.filter(param_filter_l_freq, param_filter_h_freq)
+    raw_filtered = raw.filter(param_filter_l_freq, param_filter_h_freq, param_filter_picks, param_filter_length, param_filter_l_trans_bandwidth,
+	                          param_filter_h_trans_bandwidth, param_filer_n_jobs, param_filter_method, param_filter_iir_params, param_filter_phase,
+	                          param_filter_fir_window, param_filter_fir_design, param_filter_skip_by_annotation, param_filter_pad)
 
     if param_apply_notch is True:
-        raw_filtered.notch_filter(freqs=param_notch_frequencies)
+        raw_filtered.notch_filter(param_notch_freqs, param_notch_picks, param_notch_filter_length, param_notch_widths, 
+	                              param_notch_trans_bandwith, param_notch_n_jobs, param_notch_method, param_notch_iir_parameters, param_notch_mt_bandwidth, 
+	                              param_notch_pvalue, param_notch_phase, param_notch_fir_window, param_notch_fir_design, param_notch_pad)
 
     if param_apply_resample is True:
-        raw_filtered.resample(param_sfreq)
+        raw_filtered.resample(param_resample_sfreq, param_resample_npad, param_resample_window, param_resample_stim_picks,
+	                          param_resample_n_jobs, param_resample_events, param_resample_pad)
 
     # Save file
     raw.save("out_dir_temporal_filtering/filtered-raw.fif", overwrite=True)
@@ -50,7 +55,7 @@ def main():
 	                                  config['param_filter_method'], config['param_filter_iir_params'], config['param_filter_phase'],
 	                                  config['param_filter_fir_window'], config['param_filter_fir_design'], 
 	                                  config['param_filter_skip_by_annotation'], config['param_filter_pad'],
-	                                  config['param_apply_notch'], config['param_notch_freqs'], config['param_notch_picks'], 
+	                                  config['param_apply_notch'], config['param_notch_frequencies'], config['param_notch_picks'], 
 	                                  config['param_notch_filter_length'], config['param_notch_widths'], 
 	                                  config['param_notch_trans_bandwith'], config['param_notch_n_jobs'], config['param_notch_method'], 
 	                                  config['param_notch_iir_parameters'], config['param_notch_mt_bandwidth'], 
