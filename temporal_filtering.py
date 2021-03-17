@@ -10,7 +10,7 @@ def temporal_filtering(raw, param_filter_l_freq, param_filter_h_freq, param_filt
 	                   param_filter_fir_window, param_filter_fir_design, param_filter_skip_by_annotation, param_filter_pad,
 	                   param_apply_notch, param_notch_freqs, param_notch_picks, param_notch_filter_length, param_notch_widths, 
 	                   param_notch_trans_bandwith, param_notch_n_jobs, param_notch_method, param_notch_iir_parameters, param_notch_mt_bandwidth, 
-	                   param_notch_pvalue, param_notch_phase, param_notch_fir_window, param_notch_fir_design, param_notch_pad,
+	                   param_notch_p_value, param_notch_phase, param_notch_fir_window, param_notch_fir_design, param_notch_pad,
 	                   param_apply_resample, param_resample_sfreq, param_resample_npad, param_resample_window, param_resample_stim_picks,
 	                   param_resample_n_jobs, param_resample_events, param_resample_pad):
 
@@ -28,7 +28,7 @@ def temporal_filtering(raw, param_filter_l_freq, param_filter_h_freq, param_filt
         raw_filtered.notch_filter(freqs=param_notch_freqs, picks=param_notch_picks, filter_length=param_notch_filter_length, 
         	                      notch_widths=param_notch_widths, trans_bandwidth=param_notch_trans_bandwith, n_jobs=param_notch_n_jobs, 
         	                      method=param_notch_method, iir_params=param_notch_iir_parameters, 
-	                              mt_bandwidth=param_notch_mt_bandwidth, pvalue=param_notch_pvalue, 
+	                              mt_bandwidth=param_notch_mt_bandwidth, p_value=param_notch_p_value, 
 	                              phase=param_notch_phase, fir_window=param_notch_fir_window, fir_design=param_notch_fir_design, pad=param_notch_pad)
 
     if param_apply_resample is True:
@@ -65,7 +65,7 @@ def main():
 	                                  config['param_notch_filter_length'], config['param_notch_widths'], 
 	                                  config['param_notch_trans_bandwith'], config['param_notch_n_jobs'], config['param_notch_method'], 
 	                                  config['param_notch_iir_parameters'], config['param_notch_mt_bandwidth'], 
-	                                  config['param_notch_pvalue'], config['param_notch_phase'], config['param_notch_fir_window'], 
+	                                  config['param_notch_p_value'], config['param_notch_phase'], config['param_notch_fir_window'], 
 	                                  config['param_notch_fir_design'], config['param_notch_pad'],
 	                                  config['param_apply_resample'], config['param_resample_sfreq'], config['param_resample_npad'], 
 	                                  config['param_resample_window'], config['param_resample_stim_picks'],
