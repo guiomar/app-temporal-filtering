@@ -11,7 +11,7 @@ def temporal_filtering(raw, param_apply_notch, param_notch_frequencies, param_fi
     raw_filtered = raw.filter(param_filter_l_freq, param_filter_h_freq)
 
     if param_apply_notch is True:
-        # raw.load_data()
+        raw_filtered.load_data()
         raw_filtered.notch_filter(freqs=param_notch_frequencies)
 
     if param_apply_resample is True:
