@@ -24,7 +24,7 @@
 	"param_notch_method": "fir",
 	"param_notch_iir_parameters": null,
 	"param_notch_mt_bandwidth": null,
-	"param_notch_pvalue": 0.05,
+	"param_notch_p_value": 0.05,
 	"param_notch_phase": "zero",
 	"param_notch_fir_window": "hamming",
 	"param_notch_fir_design": "firwin",
