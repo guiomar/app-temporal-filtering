@@ -9,7 +9,7 @@
 	"param_filer_n_jobs": 1,
 	"param_filter_method": "fir",
 	"param_filter_iir_params": null,
-	"param_filter_phase": 'zero',
+	"param_filter_phase": "zero",
 	"param_filter_fir_window": "hamming",
 	"param_filter_fir_design": "firwin",
 	"param_filter_skip_by_annotation": ["edge", "bad_acq_skip"],
