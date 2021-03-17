@@ -13,7 +13,7 @@
 	"param_filter_fir_window": "hamming",
 	"param_filter_fir_design": "firwin",
 	"param_filter_skip_by_annotation": ["edge", "bad_acq_skip"],
-	"param_filter_pad": 'reflect_limited',
+	"param_filter_pad": "reflect_limited",
 	"param_apply_notch": true,
 	"param_notch_freqs": 50,
 	"param_notch_picks": null,
