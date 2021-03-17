@@ -49,7 +49,7 @@ def main():
 	                                  config['param_filter_h_trans_bandwidth'], config['param_filer_n_jobs'], 
 	                                  config['param_filter_method'], config['param_filter_iir_params'], config['param_filter_phase'],
 	                                  config['param_filter_fir_window'], config['param_filter_fir_design'], 
-	                                  config['param_filter_skip_by_annotatio'], config['param_filter_pad'],
+	                                  config['param_filter_skip_by_annotation'], config['param_filter_pad'],
 	                                  config['param_apply_notch'], config['param_notch_freqs'], config['param_notch_picks'], 
 	                                  config['param_notch_filter_length'], config['param_notch_widths'], 
 	                                  config['param_notch_trans_bandwith'], config['param_notch_n_jobs'], config['param_notch_method'], 
