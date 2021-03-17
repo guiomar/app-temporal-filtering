@@ -55,7 +55,7 @@ def main():
 	                                  config['param_notch_trans_bandwith'], config['param_notch_n_jobs'], config['param_notch_method'], 
 	                                  config['param_notch_iir_parameters'], config['param_notch_mt_bandwidth'], 
 	                                  config['param_notch_pvalue'], config['param_notch_phase'], config['param_notch_fir_window'], 
-	                                  config['param_notch_fir_desig'], config['param_notch_pad'],
+	                                  config['param_notch_fir_design'], config['param_notch_pad'],
 	                                  config['param_apply_resample'], config['param_resample_sfreq'], config['param_resample_npad'], 
 	                                  config['param_resample_window'], config['param_resample_stim_picks'],
 	                                  config['param_resample_n_jobs'], config['param_resample_events'], config['param_resample_pad'])
