@@ -21,7 +21,7 @@ def temporal_filtering(raw, param_filter_l_freq, param_filter_h_freq, param_filt
     	                      l_trans_bandwidth=param_filter_l_trans_bandwidth, h_trans_bandwidth=param_filter_h_trans_bandwidth, 
     	                      n_jobs=param_filer_n_jobs, method=param_filter_method, 
 	                          iir_params=param_filter_iir_params, phase=param_filter_phase,
-	                          fir_winddow=param_filter_fir_window, fir_design=param_filter_fir_design, 
+	                          fir_window=param_filter_fir_window, fir_design=param_filter_fir_design, 
 	                          skip_by_annotation=param_filter_skip_by_annotation, pad=param_filter_pad)
 
     if param_apply_notch is True:
