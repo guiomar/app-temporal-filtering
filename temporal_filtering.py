@@ -15,8 +15,22 @@ def temporal_filtering(raw, param_filter_l_freq, param_filter_h_freq, param_filt
                        param_notch_phase, param_notch_fir_window, param_notch_fir_design, param_notch_pad,
                        param_apply_resample, param_resample_sfreq, param_resample_npad, param_resample_window,
                        param_resample_stim_picks, param_resample_n_jobs, param_resample_events, param_resample_pad):
+    """Perform filtering using MNE Python and save the file once filtered.
+
+    Parameters
+    ----------
+    raw: instance of mne.io.Raw
+        Data to be filtered.
+
+    Returns
+    -------
+    raw_filtered: instance of mne.io.Raw
+        The raw data after filtering.
+    """
 
     raw.load_data()
+
+    # Bandpass, lowpass, or highpass filter
     raw_filtered = raw.filter(l_freq=param_filter_l_freq, h_freq=param_filter_h_freq, 
                               picks=param_filter_picks, filter_length=param_filter_length,
                               l_trans_bandwidth=param_filter_l_trans_bandwidth,
@@ -25,6 +39,7 @@ def temporal_filtering(raw, param_filter_l_freq, param_filter_h_freq, param_filt
                               fir_window=param_filter_fir_window, fir_design=param_filter_fir_design,
                               skip_by_annotation=param_filter_skip_by_annotation, pad=param_filter_pad)
 
+    # Notch
     if param_apply_notch is True:
         freqs = np.arange(param_notch_freqs_start, param_notch_freqs_end, param_notch_freqs_step)
         raw_filtered.notch_filter(freqs=freqs, picks=param_notch_picks,
@@ -35,6 +50,7 @@ def temporal_filtering(raw, param_filter_l_freq, param_filter_h_freq, param_filt
                                   phase=param_notch_phase, fir_window=param_notch_fir_window,
                                   fir_design=param_notch_fir_design, pad=param_notch_pad)
 
+    # Resample
     if param_apply_resample is True:
         raw_filtered.resample(sfreq=param_resample_sfreq, npad=param_resample_npad, window=param_resample_window,
                               stim_picks=param_resample_stim_picks, n_jobs=param_resample_n_jobs,
@@ -73,9 +89,8 @@ def _compute_snr(meg_file):
     return snr
 
 
-def _generate_report(data_file_before, raw_before_preprocessing, raw_after_preprocessing, comments_about_filtering,
-                     snr_before, snr_after):
-
+def _generate_report(data_file_before, raw_before_preprocessing, raw_after_preprocessing, bad_channels,
+                     comments_about_filtering, snr_before, snr_after):
     # Generate a report
 
     # Instance of mne.Report
@@ -102,9 +117,17 @@ def _generate_report(data_file_before, raw_before_preprocessing, raw_after_prepr
                                comments=comments_about_filtering,
                                section='Frequency domain')
 
+    # Check if MaxFilter was already applied on the data
+    if raw_before_preprocessing.info['proc_history']:
+        sss_info = raw_before_preprocessing.info['proc_history'][0]['max_info']['sss_info']
+        tsss_info = raw_before_preprocessing.info['proc_history'][0]['max_info']['max_st']
+        if bool(sss_info) or bool(tsss_info) is True:
+            message_channels = f'Bad channels have been interpolated during MaxFilter.'
+    else:
+        message_channels = bad_channels
+
     # Put this info in html format
     # Give some info about the file before preprocessing
-    bad_channels = raw_before_preprocessing.info['bads']
     sampling_frequency = raw_before_preprocessing.info['sfreq']
     highpass = raw_before_preprocessing.info['highpass']
     lowpass = raw_before_preprocessing.info['lowpass']
@@ -126,7 +149,7 @@ def _generate_report(data_file_before, raw_before_preprocessing, raw_after_prepr
                     <td>Input file: {data_file_before}</td>
                 </tr>
                 <tr>
-                    <td>Bad channels: {bad_channels}</td>
+                    <td>Bad channels: {message_channels}</td>
                 </tr>
                 <tr>
                     <td>Sampling frequency: {sampling_frequency}Hz</td>
@@ -155,10 +178,10 @@ def _generate_report(data_file_before, raw_before_preprocessing, raw_after_prepr
     <body>
         <table width="50%" height="80%" border="2px">
             <tr>
-                <td>SNR before MaxFilter: {snr_before}</td>
+                <td>SNR before filtering: {snr_before}</td>
             </tr>
             <tr>
-                <td>SNR after MaxFilter: {snr_after}</td>
+                <td>SNR after filtering: {snr_after}</td>
             </tr>
         </table>
     </body>
@@ -214,6 +237,9 @@ def main():
         # Raise exception
         raise ValueError(value_error_message)
 
+    # Keep bad channels in memory
+    bad_channels = raw.info['bads']
+
     # Apply temporal filtering
     raw_copy = raw.copy()
     raw_filtered = temporal_filtering(raw_copy, config['param_filter_l_freq'], config['param_filter_h_freq'],
@@ -254,7 +280,7 @@ def main():
     snr_after = _compute_snr(raw_filtered)
 
     # Generate a report
-    _generate_report(data_file, raw, raw_filtered, comments_about_filtering, snr_before, snr_after)
+    _generate_report(data_file, raw, raw_filtered, bad_channels, comments_about_filtering, snr_before, snr_after)
 
     # Save the dict_json_product in a json file
     with open('product.json', 'w') as outfile:
