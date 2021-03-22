@@ -215,7 +215,7 @@ def _generate_report(data_file_before, raw_before_preprocessing, raw_after_prepr
     </html>"""
 
     # Add html to reports
-    report.add_htmls_to_section(html_text_info, captions='MEG recording features', section='Info', replace=False)
+    report.add_htmls_to_section(html_text_info, captions='MEG recording features', section='Data info', replace=False)
     report.add_htmls_to_section(html_text_summary_filtering, captions='Summary filtering applied', section='Filtering info',
                                 replace=False)
     report.add_htmls_to_section(html_text_snr, captions='Signal to noise ratio', section='Signal to noise ratio',
@@ -295,7 +295,7 @@ def main():
     # Info message about notch filtering if applied
     if config['param_apply_notch'] is True:
         dict_json_product['brainlife'].append({'type': 'info', 'msg': 'Notch filter was applied.'})
-        config['param_notch_freqs_start'] = f"{config['param_notch_freqs_start']}Hz and its harmonics."
+        config['param_notch_freqs_start'] = f"{config['param_notch_freqs_start']}Hz and its harmonics"
     else:
         config['param_notch_freqs_start'] = 'No Notch filter was applied'
 
@@ -303,7 +303,7 @@ def main():
     if config['param_apply_resample'] is True:
         dict_json_product['brainlife'].append({'type': 'info', 'msg': 'Data was resampled at {config["param_sfreq"]}.'})
     else:
-    	config['param_resample_sfreq'] = 'Data was not resampled.'
+    	config['param_resample_sfreq'] = 'Data was not resampled'
 
     # Success message in product.json    
     dict_json_product['brainlife'].append({'type': 'success', 'msg': 'Filtering was applied successfully.'})
