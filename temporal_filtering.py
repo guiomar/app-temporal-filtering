@@ -97,9 +97,9 @@ def _generate_report(data_file_before, raw_before_preprocessing, raw_after_prepr
     report = mne.Report(title='Results of filtering ', verbose=True)
 
     # Plot MEG signals in temporal domain
-    fig_raw = raw_before_preprocessing.pick(['meg'], exclude='bads').plot(duration=10, butterfly=False,
+    fig_raw = raw_before_preprocessing.pick(['meg'], exclude='bads').plot(duration=10, scalings='auto', butterfly=False,
                                                                           show_scrollbars=False, proj=False)
-    fig_raw_maxfilter = raw_after_preprocessing.pick(['meg'], exclude='bads').plot(duration=10, butterfly=False,
+    fig_raw_maxfilter = raw_after_preprocessing.pick(['meg'], exclude='bads').plot(duration=10, scalings='auto', butterfly=False,
                                                                                    show_scrollbars=False, proj=False)
     # Plot power spectral density
     fig_raw_psd = raw_before_preprocessing.plot_psd()
@@ -122,7 +122,7 @@ def _generate_report(data_file_before, raw_before_preprocessing, raw_after_prepr
         sss_info = raw_before_preprocessing.info['proc_history'][0]['max_info']['sss_info']
         tsss_info = raw_before_preprocessing.info['proc_history'][0]['max_info']['max_st']
         if bool(sss_info) or bool(tsss_info) is True:
-            message_channels = f'Bad channels have been interpolated during MaxFilter.'
+            message_channels = f'Bad channels have been interpolated during MaxFilter'
     else:
         message_channels = bad_channels
 
@@ -245,23 +245,23 @@ def main():
     if config['param_filter_l_freq'] is not None and config['param_filter_h_freq'] is not None:
         comments_about_filtering = f'Data was filtered between ' \
                                    f'{config["param_filter_l_freq"]} ' \
-                                   f'and {config["param_filter_h_freq"]}Hz.'
+                                   f'and {config["param_filter_h_freq"]}Hz'
         dict_json_product['brainlife'].append({'type': 'info', 'msg': comments_about_filtering})
 
     # Lowpass filter
     elif config['param_filter_l_freq'] is None and config['param_filter_h_freq'] is not None:
-        comments_about_filtering = f'Lowpass filter was applied at {config["param_filter_h_freq"]}Hz.'
+        comments_about_filtering = f'Lowpass filter was applied at {config["param_filter_h_freq"]}Hz'
         dict_json_product['brainlife'].append({'type': 'info', 'msg': comments_about_filtering})
 
     # Highpass filter
     elif config['param_filter_l_freq'] is not None and config['param_filter_h_freq'] is None:
-        comments_about_filtering = f'Highpass filter was applied at {config["param_filter_l_freq"]}Hz.'
+        comments_about_filtering = f'Highpass filter was applied at {config["param_filter_l_freq"]}Hz'
         dict_json_product['brainlife'].append({'type': 'info', 'msg': comments_about_filtering})
 
     # Raise an exception if both param_filter_l_freq and param_filter_h_freq are None
     elif config['param_filter_l_freq'] is None and config['param_filter_h_freq'] is None:
         value_error_message = f'You must specify a value for param_filter_l_freq or param_filter_h_freq, ' \
-                              f"they can't both be set to None."
+                              f"they can't both be set to None"
         # Raise exception
         raise ValueError(value_error_message)
 
