@@ -152,13 +152,13 @@ def _generate_report(data_file_before, raw_before_preprocessing, raw_after_prepr
                     <td>Bad channels: {message_channels}</td>
                 </tr>
                 <tr>
-                    <td>Sampling frequency: {sampling_frequency}Hz</td>
+                    <td>Sampling frequency before preprocessing: {sampling_frequency}Hz</td>
                 </tr>
                 <tr>
-                    <td>Highpass: {highpass}Hz</td>
+                    <td>Highpass before preprocessing: {highpass}Hz</td>
                 </tr>
                 <tr>
-                    <td>Lowpass: {lowpass}Hz</td>
+                    <td>Lowpass before preprocessing: {lowpass}Hz</td>
                 </tr>
             </table>
         </body>
