@@ -90,7 +90,7 @@ def _compute_snr(meg_file):
 
 
 def _generate_report(data_file_before, raw_before_preprocessing, raw_after_preprocessing, bad_channels,
-                     comments_about_filtering, snr_before, snr_after):
+                     comments_about_filtering, notch_freqs_start, resample_sfreq, snr_before, snr_after):
     # Generate a report
 
     # Instance of mne.Report
@@ -188,8 +188,36 @@ def _generate_report(data_file_before, raw_before_preprocessing, raw_after_prepr
 
     </html>"""
 
+    # Info on SNR
+    html_text_summary_filtering = f"""<html>
+
+    <head>
+        <style type="text/css">
+            table {{ border-collapse: collapse;}}
+            td {{ text-align: center; border: 1px solid #000000; border-style: dashed; font-size: 15px; }}
+        </style>
+    </head>
+
+    <body>
+        <table width="50%" height="80%" border="2px">
+            <tr>
+                <td>Temporal filtering: {comments_about_filtering}</td>
+            </tr>
+            <tr>
+                <td>Notch: {notch_freqs_start}</td>
+            </tr>
+            <tr>
+                <td>Resampling: {resample_sfreq}</td>
+            </tr>
+        </table>
+    </body>
+
+    </html>"""
+
     # Add html to reports
     report.add_htmls_to_section(html_text_info, captions='MEG recording features', section='Info', replace=False)
+    report.add_htmls_to_section(html_text_summary_filtering, captions='Summary filtering applied', section='Filtering info',
+                                replace=False)
     report.add_htmls_to_section(html_text_snr, captions='Signal to noise ratio', section='Signal to noise ratio',
                                 replace=False)
 
@@ -267,10 +295,15 @@ def main():
     # Info message about notch filtering if applied
     if config['param_apply_notch'] is True:
         dict_json_product['brainlife'].append({'type': 'info', 'msg': 'Notch filter was applied.'})
+        config['param_notch_freqs_start'] = f'{config['param_notch_freqs_start']}Hz and its harmonics.'
+    else:
+        config['param_notch_freqs_start'] = 'No Notch filter was applied'
 
     # Info message about resampling if applied
     if config['param_apply_resample'] is True:
         dict_json_product['brainlife'].append({'type': 'info', 'msg': 'Data was resampled at {config["param_sfreq"]}.'})
+    else:
+    	config['param_resample_sfreq'] = 'Data was not resampled.'
 
     # Success message in product.json    
     dict_json_product['brainlife'].append({'type': 'success', 'msg': 'Filtering was applied successfully.'})
@@ -280,7 +313,7 @@ def main():
     snr_after = _compute_snr(raw_filtered)
 
     # Generate a report
-    _generate_report(data_file, raw, raw_filtered, bad_channels, comments_about_filtering, snr_before, snr_after)
+    _generate_report(data_file, raw, raw_filtered, bad_channels, comments_about_filtering, config['param_notch_freqs_start'], config['param_resample_sfreq'], snr_before, snr_after)
 
     # Save the dict_json_product in a json file
     with open('product.json', 'w') as outfile:
