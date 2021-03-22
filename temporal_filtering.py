@@ -295,7 +295,7 @@ def main():
     # Info message about notch filtering if applied
     if config['param_apply_notch'] is True:
         dict_json_product['brainlife'].append({'type': 'info', 'msg': 'Notch filter was applied.'})
-        config['param_notch_freqs_start'] = f'{config['param_notch_freqs_start']}Hz and its harmonics.'
+        config['param_notch_freqs_start'] = f"{config['param_notch_freqs_start']}Hz and its harmonics."
     else:
         config['param_notch_freqs_start'] = 'No Notch filter was applied'
 
