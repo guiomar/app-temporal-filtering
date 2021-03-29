@@ -57,7 +57,7 @@ def temporal_filtering(raw, param_filter_l_freq, param_filter_h_freq, param_filt
                               events=param_resample_events, pad=param_resample_pad)
 
     # Save file
-    raw.save("out_dir_temporal_filtering/filtered-raw.fif", overwrite=True)
+    raw.save("out_dir_temporal_filtering/meg.fif", overwrite=True)
 
     return raw_filtered
 
