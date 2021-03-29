@@ -21,6 +21,96 @@ def temporal_filtering(raw, param_filter_l_freq, param_filter_h_freq, param_filt
     ----------
     raw: instance of mne.io.Raw
         Data to be filtered.
+    param_filter_l_freq: float or None
+        For FIR filters, the lower pass-band edge; for IIR filters, the lower cutoff frequency. If None the 
+        data are only low-passed.
+    param_filter_h_freq: float or None
+        For FIR filters, the upper pass-band edge; for IIR filters, the upper cutoff frequency. If None the 
+        data are only high-passed.
+    param_filter_picks: str, list, slice, or None
+        Channels to include.
+    param_filter_length: str
+        Length of the FIR filter to use (if applicable). Can be ‘auto’ (default) : the filter length is chosen based 
+        on the size of the transition regions, or an other str (human-readable time in units of “s” or “ms”: 
+        e.g., “10s” or “5500ms”. 
+    param_filter_l_trans_bandwidth: float or str
+        Width of the transition band at the low cut-off frequency in Hz (high pass or cutoff 1 in bandpass). 
+        Can be “auto” (default) to use a multiple of l_freq.     
+    param_filter_h_trans_bandwidth: float or str   
+        Width of the transition band at the high cut-off frequency in Hz (low pass or cutoff 2 in bandpass). 
+        Can be “auto” (default) to use a multiple of h_freq.
+    param_filer_n_jobs: int
+        Number of jobs to run in parallel.
+    param_filter_method: str
+        ‘fir’ will use overlap-add FIR filtering, ‘iir’ will use IIR forward-backward filtering (via filtfilt).
+    param_filter_iir_params: dict or None
+        Dictionary of parameters to use for IIR filtering. If iir_params is None and method=”iir”, 
+        4th order Butterworth will be used. 
+    param_filter_phase: str
+        Phase of the filter, only used if method='fir'. Either 'zero' or 'zero-double'.
+    param_filter_fir_window: str
+        The window to use in FIR design, can be “hamming” (default), “hann” (default in 0.13), or “blackman”.
+    param_filter_fir_deesign: str
+        Can be “firwin” (default) or “firwin2”.
+    param_filter_skip_by_annotation: str or list of str
+        If a string (or list of str), any annotation segment that begins with the given string will not be included in
+        filtering, and segments on either side of the given excluded annotated segment will be filtered separately.
+    param_filter_pad: str
+        The type of padding to use. Supports all numpy.pad() mode options. Can also be “reflect_limited” (default).
+    param_apply_notch: bool
+        If True apply a notch filter.
+    param_notch_freqs_start: int
+        Frequency to notch filter in Hz.
+    param_notch_freqs_end: int
+        The last harmonic to notch filter in Hz.
+    param_notch_freqs_step: int
+        The step in Hz to filter notch harmonics between param_notch_freqs_start and param_notch_freqs_end.
+    param_notch_picks: list, slice, or None
+        Channels to include.
+    param_notch_filter_length: str
+        Length of the FIR filter to use (if applicable). Can be ‘auto’ (default) : the filter length is chosen based 
+        on the size of the transition regions, or an other str (human-readable time in units of “s” or “ms”: 
+        e.g., “10s” or “5500ms”. 
+    param_notch_widths: float or None
+        Width of the stop band in Hz. If None, freqs / 200 is used.
+    param_notch_trans_bandwidth: float
+        Width of the transition band in Hz. 
+    param_notch_n_jobs: int
+        Number of jobs to run in parallel.
+    param_notch_method: str
+        ‘fir’ will use overlap-add FIR filtering, ‘iir’ will use IIR forward-backward filtering (via filtfilt). 
+    param_notch_iir_params: dict or None
+        Dictionary of parameters to use for IIR filtering. If iir_params is None and method=”iir”, 
+        4th order Butterworth will be used.
+    param_notch_mt_bandwidth: float or None
+        The bandwidth of the multitaper windowing function in Hz.
+    param_notch_p_value: float
+        P-value to use in F-test thresholding to determine significant sinusoidal components 
+        to remove when method=’spectrum_fit’ and freqs=None.
+    param_notch_phase: str
+        Phase of the filter, only used if method='fir'. Either 'zero' or 'zero-double'.
+    param_notch_fir_window: str
+        The window to use in FIR design, can be “hamming” (default), “hann”, or “blackman”.
+    param_notch_fir_design: str
+        Can be “firwin” (default) or “firwin2”.
+    param_notch_pad: str
+        The type of padding to use. Supports all numpy.pad() mode options. Can also be “reflect_limited” (default).
+    param_apply_resample: bool
+        If True resample the data.
+    param_resample_sfreq: float
+        New sample rate to use.
+    param_resample_npad: int or str
+        Amount to pad the start and end of the data. Can be “auto” (default).
+    param_resample_window: str
+        Frequency-domain window to use in resampling. 
+    param_resample_stim_picks: list of int or None
+        Stim channels.
+    param_resample_n_jobs: int
+        Number of jobs to run in parallel.
+    param_resample_events: 2D array, shape (n_events, 3) or None
+        An optional event matrix. 
+    param_resample_pad: str
+        The type of padding to use. Supports all numpy.pad() mode options. Can also be “reflect_limited” (default).
 
     Returns
     -------
