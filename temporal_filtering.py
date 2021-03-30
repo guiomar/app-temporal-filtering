@@ -27,19 +27,19 @@ def temporal_filtering(raw, param_filter_l_freq, param_filter_h_freq, param_filt
     param_filter_h_freq: float or None
         For FIR filters, the upper pass-band edge; for IIR filters, the upper cutoff frequency. If None the 
         data are only high-passed.
-    param_filter_picks: str, list, slice, or None
+    param_filter_picks: str, list, or None
         Channels to include.
     param_filter_length: str
         Length of the FIR filter to use (if applicable). Can be ‘auto’ (default) : the filter length is chosen based 
         on the size of the transition regions, or an other str (human-readable time in units of “s” or “ms”: 
-        e.g., “10s” or “5500ms”. 
+        e.g., “10s” or “5500ms”). 
     param_filter_l_trans_bandwidth: float or str
         Width of the transition band at the low cut-off frequency in Hz (high pass or cutoff 1 in bandpass). 
         Can be “auto” (default) to use a multiple of l_freq.     
     param_filter_h_trans_bandwidth: float or str   
         Width of the transition band at the high cut-off frequency in Hz (low pass or cutoff 2 in bandpass). 
         Can be “auto” (default) to use a multiple of h_freq.
-    param_filer_n_jobs: int
+    param_filter_n_jobs: int
         Number of jobs to run in parallel.
     param_filter_method: str
         ‘fir’ will use overlap-add FIR filtering, ‘iir’ will use IIR forward-backward filtering (via filtfilt).
@@ -62,10 +62,10 @@ def temporal_filtering(raw, param_filter_l_freq, param_filter_h_freq, param_filt
     param_notch_freqs_start: int
         Frequency to notch filter in Hz.
     param_notch_freqs_end: int
-        The last harmonic to notch filter in Hz.
+        Last harmonic to notch filter in Hz.
     param_notch_freqs_step: int
-        The step in Hz to filter notch harmonics between param_notch_freqs_start and param_notch_freqs_end.
-    param_notch_picks: list, slice, or None
+        The step in Hz to filter power lines harmonics between param_notch_freqs_start and param_notch_freqs_end.
+    param_notch_picks: list, or None
         Channels to include.
     param_notch_filter_length: str
         Length of the FIR filter to use (if applicable). Can be ‘auto’ (default) : the filter length is chosen based 
