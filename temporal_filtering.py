@@ -391,7 +391,9 @@ def main():
 
     # Info message about resampling if applied
     if config['param_apply_resample'] is True:
-        dict_json_product['brainlife'].append({'type': 'info', 'msg': 'Data was resampled at {config["param_sfreq"]}.'})
+        dict_json_product['brainlife'].append({'type': 'info', 'msg': f'Data was resampled at {config["param_sfreq"]}. ' 
+                                                                      f'Please bear in mind that is generally recommended not to epoch '
+                                                                      f'downsampled data, but instead epoch and then downsample.'})
     else:
     	config['param_resample_sfreq'] = 'Data was not resampled'
 
