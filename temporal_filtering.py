@@ -335,8 +335,8 @@ def main():
     # Band pass filter
     comments_about_filtering = ''
     if config['param_filter_l_freq'] is not None and config['param_filter_h_freq'] is not None:
-        comments_about_filtering = f'Data was filtered between ' 
-                                   f'{config["param_filter_l_freq"]} ' 
+        comments_about_filtering = f'Data was filtered between ' \
+                                   f'{config["param_filter_l_freq"]} ' \
                                    f'and {config["param_filter_h_freq"]}Hz'
         dict_json_product['brainlife'].append({'type': 'info', 'msg': comments_about_filtering})
 
@@ -352,7 +352,7 @@ def main():
 
     # Raise an exception if both param_filter_l_freq and param_filter_h_freq are None
     elif config['param_filter_l_freq'] is None and config['param_filter_h_freq'] is None:
-        value_error_message = f'You must specify a value for param_filter_l_freq or param_filter_h_freq, ' 
+        value_error_message = f'You must specify a value for param_filter_l_freq or param_filter_h_freq, ' \
                               f"they can't both be set to None"
         # Raise exception
         raise ValueError(value_error_message)
