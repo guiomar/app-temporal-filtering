@@ -213,6 +213,8 @@ def _generate_report(data_file_before, raw_before_preprocessing, raw_after_prepr
         tsss_info = raw_before_preprocessing.info['proc_history'][0]['max_info']['max_st']
         if bool(sss_info) or bool(tsss_info) is True:
             message_channels = f'Bad channels have been interpolated during MaxFilter'
+        else:
+            message_channels = bad_channels
     else:
         message_channels = bad_channels
 
