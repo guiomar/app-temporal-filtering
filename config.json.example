@@ -1,6 +1,6 @@
 {
     "fif": "/network/lustre/iss01/home/aurore.bussalb/Repositories/app-bad-channels/out_dir_bad_channels/bad_channels-raw.fif",
-    "param_filter_l_freq": 0.5,
+    "param_filter_l_freq": null,
 	"param_filter_h_freq": 150,
 	"param_filter_picks": null,
 	"param_filter_length": "auto",
