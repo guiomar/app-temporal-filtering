@@ -6,11 +6,11 @@ import numpy as np
 
 
 def temporal_filtering(raw, param_filter_l_freq, param_filter_h_freq, param_filter_picks, param_filter_length,
-                       param_filter_l_trans_bandwidth, param_filter_h_trans_bandwidth, param_filer_n_jobs,
+                       param_filter_l_trans_bandwidth, param_filter_h_trans_bandwidth, param_filter_n_jobs,
                        param_filter_method, param_filter_iir_params, param_filter_phase, param_filter_fir_window,
                        param_filter_fir_design, param_filter_skip_by_annotation, param_filter_pad, param_apply_notch,
                        param_notch_freqs_start, param_notch_freqs_end, param_notch_freqs_step, param_notch_picks,
-                       param_notch_filter_length, param_notch_widths, param_notch_trans_bandwith, param_notch_n_jobs,
+                       param_notch_filter_length, param_notch_widths, param_notch_trans_bandwidth, param_notch_n_jobs,
                        param_notch_method, param_notch_iir_parameters, param_notch_mt_bandwidth, param_notch_p_value,
                        param_notch_phase, param_notch_fir_window, param_notch_fir_design, param_notch_pad,
                        param_apply_resample, param_resample_sfreq, param_resample_npad, param_resample_window,
@@ -50,7 +50,7 @@ def temporal_filtering(raw, param_filter_l_freq, param_filter_h_freq, param_filt
         Phase of the filter, only used if method='fir'. Either 'zero' or 'zero-double'.
     param_filter_fir_window: str
         The window to use in FIR design, can be “hamming” (default), “hann” (default in 0.13), or “blackman”.
-    param_filter_fir_deesign: str
+    param_filter_fir_design: str
         Can be “firwin” (default) or “firwin2”.
     param_filter_skip_by_annotation: str or list of str
         If a string (or list of str), any annotation segment that begins with the given string will not be included in
@@ -79,7 +79,7 @@ def temporal_filtering(raw, param_filter_l_freq, param_filter_h_freq, param_filt
         Number of jobs to run in parallel.
     param_notch_method: str
         ‘fir’ will use overlap-add FIR filtering, ‘iir’ will use IIR forward-backward filtering (via filtfilt). 
-    param_notch_iir_params: dict or None
+    param_notch_iir_parameters: dict or None
         Dictionary of parameters to use for IIR filtering. If iir_params is None and method=”iir”, 
         4th order Butterworth will be used.
     param_notch_mt_bandwidth: float or None
@@ -124,7 +124,7 @@ def temporal_filtering(raw, param_filter_l_freq, param_filter_h_freq, param_filt
     raw_filtered = raw.filter(l_freq=param_filter_l_freq, h_freq=param_filter_h_freq, 
                               picks=param_filter_picks, filter_length=param_filter_length,
                               l_trans_bandwidth=param_filter_l_trans_bandwidth,
-                              h_trans_bandwidth=param_filter_h_trans_bandwidth, n_jobs=param_filer_n_jobs,
+                              h_trans_bandwidth=param_filter_h_trans_bandwidth, n_jobs=param_filter_n_jobs,
                               method=param_filter_method, iir_params=param_filter_iir_params, phase=param_filter_phase,
                               fir_window=param_filter_fir_window, fir_design=param_filter_fir_design,
                               skip_by_annotation=param_filter_skip_by_annotation, pad=param_filter_pad)
@@ -134,7 +134,7 @@ def temporal_filtering(raw, param_filter_l_freq, param_filter_h_freq, param_filt
         freqs = np.arange(param_notch_freqs_start, param_notch_freqs_end, param_notch_freqs_step)
         raw_filtered.notch_filter(freqs=freqs, picks=param_notch_picks,
                                   filter_length=param_notch_filter_length, notch_widths=param_notch_widths,
-                                  trans_bandwidth=param_notch_trans_bandwith, n_jobs=param_notch_n_jobs,
+                                  trans_bandwidth=param_notch_trans_bandwidth, n_jobs=param_notch_n_jobs,
                                   method=param_notch_method, iir_params=param_notch_iir_parameters,
                                   mt_bandwidth=param_notch_mt_bandwidth, p_value=param_notch_p_value,
                                   phase=param_notch_phase, fir_window=param_notch_fir_window,
@@ -189,8 +189,10 @@ def _generate_report(data_file_before, raw_before_preprocessing, raw_after_prepr
     # Plot MEG signals in temporal domain
     fig_raw = raw_before_preprocessing.pick(['meg'], exclude='bads').plot(duration=10, scalings='auto', butterfly=False,
                                                                           show_scrollbars=False, proj=False)
-    fig_raw_maxfilter = raw_after_preprocessing.pick(['meg'], exclude='bads').plot(duration=10, scalings='auto', butterfly=False,
+    fig_raw_maxfilter = raw_after_preprocessing.pick(['meg'], exclude='bads').plot(duration=10, scalings='auto',
+                                                                                   butterfly=False,
                                                                                    show_scrollbars=False, proj=False)
+
     # Plot power spectral density
     fig_raw_psd = raw_before_preprocessing.plot_psd()
     fig_raw_maxfilter_psd = raw_after_preprocessing.plot_psd()
@@ -308,8 +310,8 @@ def _generate_report(data_file_before, raw_before_preprocessing, raw_after_prepr
 
     # Add html to reports
     report.add_htmls_to_section(html_text_info, captions='MEG recording features', section='Data info', replace=False)
-    report.add_htmls_to_section(html_text_summary_filtering, captions='Summary filtering applied', section='Filtering info',
-                                replace=False)
+    report.add_htmls_to_section(html_text_summary_filtering, captions='Summary filtering applied',
+                                section='Filtering info', replace=False)
     report.add_htmls_to_section(html_text_snr, captions='Signal to noise ratio', section='Signal to noise ratio',
                                 replace=False)
 
@@ -357,6 +359,31 @@ def main():
         # Raise exception
         raise ValueError(value_error_message)
 
+    # Info message about notch filtering if applied
+    if config['param_apply_notch'] is True:
+        dict_json_product['brainlife'].append({'type': 'info', 'msg': 'Notch filter was applied.'})
+        comments_notch = f"{config['param_notch_freqs_start']}Hz and its harmonics"
+    else:
+        comments_notch = 'No Notch filter was applied'
+
+    # Info message about resampling if applied
+    if config['param_apply_resample'] is True:
+        if config['param_resample_sfreq'] is not None:
+            dict_json_product['brainlife'].append({'type': 'info', 'msg': f'Data was resampled at '
+                                                                          f'{config["param_resample_sfreq"]}. '
+                                                                          f'Please bear in mind that it is generally '
+                                                                          f'recommended not to epoch '
+                                                                          f'downsampled data, but instead epoch '
+                                                                          f'and then downsample.'})
+            comments_resample_freq = f'{config["param_resample_sfreq"]}Hz'
+        else:
+            value_error_message = f"You must specify a value for param_resample_sfreq. If you don't want to resample " \
+                                  f'your data, please set param_apply_resample to False.'
+            # Raise exception
+            raise ValueError(value_error_message)
+    else:
+        comments_resample_freq = 'Data was not resampled'
+
     # Keep bad channels in memory
     bad_channels = raw.info['bads']
 
@@ -373,7 +400,7 @@ def main():
                                       config['param_notch_freqs_start'], config['param_notch_freqs_end'],
                                       config['param_notch_freqs_step'], config['param_notch_picks'],
                                       config['param_notch_filter_length'], config['param_notch_widths'],
-                                      config['param_notch_trans_bandwith'], config['param_notch_n_jobs'],
+                                      config['param_notch_trans_bandwidth'], config['param_notch_n_jobs'],
                                       config['param_notch_method'], config['param_notch_iir_parameters'],
                                       config['param_notch_mt_bandwidth'], config['param_notch_p_value'],
                                       config['param_notch_phase'], config['param_notch_fir_window'],
@@ -384,21 +411,6 @@ def main():
                                       config['param_resample_events'], config['param_resample_pad'])
     del raw_copy
 
-    # Info message about notch filtering if applied
-    if config['param_apply_notch'] is True:
-        dict_json_product['brainlife'].append({'type': 'info', 'msg': 'Notch filter was applied.'})
-        config['param_notch_freqs_start'] = f"{config['param_notch_freqs_start']}Hz and its harmonics"
-    else:
-        config['param_notch_freqs_start'] = 'No Notch filter was applied'
-
-    # Info message about resampling if applied
-    if config['param_apply_resample'] is True:
-        dict_json_product['brainlife'].append({'type': 'info', 'msg': f'Data was resampled at {config["param_resample_sfreq"]}. '
-                                                                      f'Please bear in mind that it is generally recommended not to epoch '
-                                                                      f'downsampled data, but instead epoch and then downsample.'})
-    else:
-    	config['param_resample_sfreq'] = 'Data was not resampled'
-
     # Success message in product.json    
     dict_json_product['brainlife'].append({'type': 'success', 'msg': 'Filtering was applied successfully.'})
 
@@ -407,7 +419,8 @@ def main():
     snr_after = _compute_snr(raw_filtered)
 
     # Generate a report
-    _generate_report(data_file, raw, raw_filtered, bad_channels, comments_about_filtering, config['param_notch_freqs_start'], config['param_resample_sfreq'], snr_before, snr_after)
+    _generate_report(data_file, raw, raw_filtered, bad_channels, comments_about_filtering,
+                     comments_notch, comments_resample_freq, snr_before, snr_after)
 
     # Save the dict_json_product in a json file
     with open('product.json', 'w') as outfile:
