@@ -433,28 +433,35 @@ def main():
     # Keep bad channels in memory
     bad_channels = raw.info['bads']
 
+    # Define kwargs
+    # Delete keys values in config.json when this app is executed on Brainlife
+    if '_app' and '_tid' and '_inputs' and '_outputs' in config.keys():
+        del config['_app'], config['_tid'], config['_inputs'], config['_outputs'] 
+    kwargs = config  
+
     # Apply temporal filtering
     raw_copy = raw.copy()
-    raw_filtered = temporal_filtering(raw_copy, config['param_filter_l_freq'], config['param_filter_h_freq'],
-                                      config['param_filter_picks'], config['param_filter_length'],
-                                      config['param_filter_l_trans_bandwidth'],
-                                      config['param_filter_h_trans_bandwidth'], config['param_filer_n_jobs'],
-                                      config['param_filter_method'], config['param_filter_iir_params'],
-                                      config['param_filter_phase'], config['param_filter_fir_window'],
-                                      config['param_filter_fir_design'], config['param_filter_skip_by_annotation'],
-                                      config['param_filter_pad'], config['param_apply_notch'],
-                                      config['param_notch_freqs_start'], config['param_notch_freqs_end'],
-                                      config['param_notch_freqs_step'], config['param_notch_picks'],
-                                      config['param_notch_filter_length'], config['param_notch_widths'],
-                                      config['param_notch_trans_bandwidth'], config['param_notch_n_jobs'],
-                                      config['param_notch_method'], config['param_notch_iir_parameters'],
-                                      config['param_notch_mt_bandwidth'], config['param_notch_p_value'],
-                                      config['param_notch_phase'], config['param_notch_fir_window'],
-                                      config['param_notch_fir_design'], config['param_notch_pad'],
-                                      config['param_apply_resample'], config['param_resample_sfreq'],
-                                      config['param_resample_npad'], config['param_resample_window'],
-                                      config['param_resample_stim_picks'], config['param_resample_n_jobs'],
-                                      config['param_resample_events'], config['param_resample_pad'])
+    # raw_filtered = temporal_filtering(raw_copy, config['param_filter_l_freq'], config['param_filter_h_freq'],
+    #                                   config['param_filter_picks'], config['param_filter_length'],
+    #                                   config['param_filter_l_trans_bandwidth'],
+    #                                   config['param_filter_h_trans_bandwidth'], config['param_filer_n_jobs'],
+    #                                   config['param_filter_method'], config['param_filter_iir_params'],
+    #                                   config['param_filter_phase'], config['param_filter_fir_window'],
+    #                                   config['param_filter_fir_design'], config['param_filter_skip_by_annotation'],
+    #                                   config['param_filter_pad'], config['param_apply_notch'],
+    #                                   config['param_notch_freqs_start'], config['param_notch_freqs_end'],
+    #                                   config['param_notch_freqs_step'], config['param_notch_picks'],
+    #                                   config['param_notch_filter_length'], config['param_notch_widths'],
+    #                                   config['param_notch_trans_bandwidth'], config['param_notch_n_jobs'],
+    #                                   config['param_notch_method'], config['param_notch_iir_parameters'],
+    #                                   config['param_notch_mt_bandwidth'], config['param_notch_p_value'],
+    #                                   config['param_notch_phase'], config['param_notch_fir_window'],
+    #                                   config['param_notch_fir_design'], config['param_notch_pad'],
+    #                                   config['param_apply_resample'], config['param_resample_sfreq'],
+    #                                   config['param_resample_npad'], config['param_resample_window'],
+    #                                   config['param_resample_stim_picks'], config['param_resample_n_jobs'],
+    #                                   config['param_resample_events'], config['param_resample_pad'])
+    raw_filtered = temporal_filtering(raw_copy, **kwargs)
     del raw_copy
 
     # Success message in product.json    
