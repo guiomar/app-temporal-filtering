@@ -40,13 +40,13 @@ This is a draft of a future Brainlife App that filters MEG signals using the MNE
     * notch_method: `str`, 'fir' will use overlap-add FIR filtering, 'iir' will use IIR forward-backward filtering. Default is 'fir'.
     * notch_iir_params: `dict`, optional, dictionary of parameters to use for IIR filtering. To know how to define the dictionary go 
         [there]{https://mne.tools/stable/generated/mne.filter.construct_iir_filter.html#mne.filter.construct_iir_filter}. Default is `None`. 
-    * param_notch_mt_bandwidth: `float`, optional, the bandwidth of the multitaper windowing function in Hz. Default is `None`.
-    * param_notch_p_value: `float`, p-value to use in F-test thresholding to determine significant sinusoidal components. Default is 0.05.
-    * param_notch_phase: `str`, phase of the filter, only used if method='fir'. Default is 'zero'.
-    * param_notch_fir_window: `str`, the window to use in FIR design. Default is 'hamming'.
-    * param_notch_fir_design: `str`. Default is 'firwin'.
-    * param_notch_pad: `str`, the type of padding to use. Default is 'reflect_limited'.
-    * param_apply_resample: `bool`, if True resample the data. Default is `True`.
+    * notch_mt_bandwidth: `float`, optional, the bandwidth of the multitaper windowing function in Hz. Default is `None`.
+    * notch_p_value: `float`, p-value to use in F-test thresholding to determine significant sinusoidal components. Default is 0.05.
+    * notch_phase: `str`, phase of the filter, only used if method='fir'. Default is 'zero'.
+    * notch_fir_window: `str`, the window to use in FIR design. Default is 'hamming'.
+    * notch_fir_design: `str`. Default is 'firwin'.
+    * notch_pad: `str`, the type of padding to use. Default is 'reflect_limited'.
+    * apply_resample: `bool`, if True resample the data. Default is `True`.
     * param_resample_sfreq: `float`, new sample rate to use.
     * param_resample_npad: `int` or `str`, amount to pad the start and end of the data. Default is 'auto'.
     * param_resample_window: `str`, frequency-domain window to use in resampling. Default is `boxcar`. 
