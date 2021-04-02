@@ -355,22 +355,22 @@ def main():
     # Band pass filter
     if config['param_filter_l_freq'] is not None and config['param_filter_h_freq'] is not None:
         comments_about_filtering = f'Data was filtered between ' \
-                                   f'{config['param_filter_l_freq']} ' \
-                                   f'and {config['param_filter_h_freq']}Hz'
+                                   f'{config["param_filter_l_freq"]} ' \
+                                   f'and {config["param_filter_h_freq"]}Hz'
         dict_json_product['brainlife'].append({'type': 'info', 'msg': comments_about_filtering})
 
     # Lowpass filter
     elif config['param_filter_l_freq'] is None and config['param_filter_h_freq'] is not None:
-        comments_about_filtering = f'Lowpass filter was applied at {config['param_filter_h_freq']}Hz'
+        comments_about_filtering = f'Lowpass filter was applied at {config["param_filter_h_freq"]}Hz'
         dict_json_product['brainlife'].append({'type': 'info', 'msg': comments_about_filtering})
 
     # Highpass filter
     elif config['param_filter_l_freq'] is not None and config['param_filter_h_freq'] is None:
-        comments_about_filtering = f'Highpass filter was applied at {config['param_filter_l_freq']}Hz'
+        comments_about_filtering = f'Highpass filter was applied at {config["param_filter_l_freq"]}Hz'
         dict_json_product['brainlife'].append({'type': 'info', 'msg': comments_about_filtering})
 
     # Raise an exception if both param_filter_l_freq and param_filter_h_freq are None
-    elif config['param_filter_l_freq'] is None and config['param_filter_h_freq'] is None:
+    elif config['param_filter_l_freq'] is None and config["param_filter_h_freq"] is None:
         value_error_message = f'You must specify a value for param_filter_l_freq or param_filter_h_freq, ' \
                               f"they can't both be set to None"
         # Raise exception
