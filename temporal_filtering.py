@@ -62,7 +62,7 @@ def temporal_filtering(raw, param_filter_l_freq, param_filter_h_freq, param_filt
     param_notch_freqs_start: int
         Frequency to notch filter in Hz.
     param_notch_freqs_end: int
-        Last harmonic to notch filter in Hz.
+        End of the interval (in Hz) of the power lines harmonics to notch filter. This value is excluded.
     param_notch_freqs_step: int
         The step in Hz to filter power lines harmonics between param_notch_freqs_start and param_notch_freqs_end.
     param_notch_picks: list, or None
