@@ -21,7 +21,7 @@ This is a draft of a future Brainlife App that filters MEG signals using the MNE
     * filter_n_jobs: `int`, number of jobs to run in parallel. Default is 1. 
     * filter_method: `str`, 'fir' will use overlap-add FIR filtering, 'iir' will use IIR forward-backward filtering. Default is 'fir'.
     * filter_iir_params: `dict`, optional, dictionary of parameters to use for IIR filtering. To know how to define the dictionary go 
-        [there]{https://mne.tools/stable/generated/mne.filter.construct_iir_filter.html#mne.filter.construct_iir_filter}. Default is `None`.
+        [there](https://mne.tools/stable/generated/mne.filter.construct_iir_filter.html#mne.filter.construct_iir_filter). Default is `None`.
     * filter_phase: `str`, phase of the filter. Default is 'zero'.
     * filter_fir_window: `str`, the window to use in FIR design. Default is 'hamming'.
     * filter_fir_design: `str`. Default is `firwin`.
