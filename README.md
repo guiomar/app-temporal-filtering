@@ -30,7 +30,7 @@ This is a draft of a future Brainlife App that filters MEG signals using the MNE
     * filter_pad: `str`, the type of padding to use. Default is 'reflect_limited'.
     * apply_notch: `bool`, if `True`, apply a notch filter. Default is `True`.
     * notch_freqs_start: `int`, frequency to notch filter in Hz. Default is 50.
-    * notch_freqs_end: `int`, last harmonic to notch filter in Hz. Default is 251.  
+    * notch_freqs_end: `int`, end of the interval (in Hz) of the power lines harmonics to notch filter (this value is excluded). Default is 251.  
     * notch_freqs_step: `int`, The step in Hz to filter power lines harmonics between param_notch_freqs_start and param_notch_freqs_end. Default is 50.
     * notch_picks: `str`or `list`, optional, channels to include. Default is `None`. 
     * notch_filter_length: `str`, length of the FIR filter to use in human-readable time units. Default is `auto`. 
