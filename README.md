@@ -39,7 +39,7 @@ This is a draft of a future Brainlife App that filters MEG signals using the MNE
     * notch_n_jobs: `int`, number of jobs to run in parallel. Default is 1.
     * notch_method: `str`, 'fir' will use overlap-add FIR filtering, 'iir' will use IIR forward-backward filtering. Default is 'fir'.
     * notch_iir_params: `dict`, optional, dictionary of parameters to use for IIR filtering. To know how to define the dictionary go 
-        [there]{https://mne.tools/stable/generated/mne.filter.construct_iir_filter.html#mne.filter.construct_iir_filter}. Default is `None`. 
+        [there](https://mne.tools/stable/generated/mne.filter.construct_iir_filter.html#mne.filter.construct_iir_filter). Default is `None`. 
     * notch_mt_bandwidth: `float`, optional, the bandwidth of the multitaper windowing function in Hz. Default is `None`.
     * notch_p_value: `float`, p-value to use in F-test thresholding to determine significant sinusoidal components. Default is 0.05.
     * notch_phase: `str`, phase of the filter, only used if method='fir'. Default is 'zero'.
