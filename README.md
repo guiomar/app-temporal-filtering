@@ -1,8 +1,8 @@
 # app-temporal-filtering
 
 This is a draft of a future Brainlife App that filters MEG signals using the MNE functions: 
-[`filter`](https://mne.tools/stable/generated/mne.io.Raw.html#mne.io.Raw.filter), 
-[`notch_filter`](https://mne.tools/stable/generated/mne.io.Raw.html#mne.io.Raw.notch_filter), 
+[`mne.io.Raw.filter`](https://mne.tools/stable/generated/mne.io.Raw.html#mne.io.Raw.filter), 
+[`mne.io.Raw.notch_filter`](https://mne.tools/stable/generated/mne.io.Raw.html#mne.io.Raw.notch_filter), 
 [`mne.io.Raw.resample`](https://mne.tools/stable/generated/mne.io.Raw.html#mne.io.Raw.resample).
 
 # app-temporal-filtering documentation
@@ -20,7 +20,8 @@ This is a draft of a future Brainlife App that filters MEG signals using the MNE
     * filter_h_trans_bandwidth: `float` or `str`, width of the transition band at the high cut-off frequency in Hz. Default is `auto`.
     * filter_n_jobs: `int`, number of jobs to run in parallel. Default is 1. 
     * filter_method: `str`, 'fir' will use overlap-add FIR filtering, 'iir' will use IIR forward-backward filtering. Default is 'fir'.
-    * filter_iir_params: `dict`, optional, dictionary of parameters to use for IIR filtering. Default is `None`.
+    * filter_iir_params: `dict`, optional, dictionary of parameters to use for IIR filtering. To know how to define the dictionary go 
+        [there]{https://mne.tools/stable/generated/mne.filter.construct_iir_filter.html#mne.filter.construct_iir_filter}. Default is `None`.
     * filter_phase: `str`, phase of the filter. Default is 'zero'.
     * filter_fir_window: `str`, the window to use in FIR design. Default is 'hamming'.
     * filter_fir_design: `str`. Default is `firwin`.
@@ -37,7 +38,8 @@ This is a draft of a future Brainlife App that filters MEG signals using the MNE
     * notch_trans_bandwidth: `float`, width of the transition band in Hz. Default is 1.0.
     * notch_n_jobs: `int`, number of jobs to run in parallel. Default is 1.
     * notch_method: `str`, 'fir' will use overlap-add FIR filtering, 'iir' will use IIR forward-backward filtering. Default is 'fir'.
-    * notch_iir_params: `dict`, optional, dictionary of parameters to use for IIR filtering. Default is `None`. 
+    * notch_iir_params: `dict`, optional, dictionary of parameters to use for IIR filtering. To know how to define the dictionary go 
+        [there]{https://mne.tools/stable/generated/mne.filter.construct_iir_filter.html#mne.filter.construct_iir_filter}. Default is `None`. 
     * param_notch_mt_bandwidth: `float`, optional, the bandwidth of the multitaper windowing function in Hz. Default is `None`.
     * param_notch_p_value: `float`, p-value to use in F-test thresholding to determine significant sinusoidal components. Default is 0.05.
     * param_notch_phase: `str`, phase of the filter, only used if method='fir'. Default is 'zero'.
@@ -48,7 +50,7 @@ This is a draft of a future Brainlife App that filters MEG signals using the MNE
     * param_resample_sfreq: `float`, new sample rate to use.
     * param_resample_npad: `int` or `str`, amount to pad the start and end of the data. Default is 'auto'.
     * param_resample_window: `str`, frequency-domain window to use in resampling. Default is `boxcar`. 
-    * param_resample_stim_picks: `list of int` or `None`, stim channels. Default is `None`.
+    * param_resample_stim_picks: `list of /*int` or `None`, stim channels. Default is `None`.
     * param_resample_n_jobs: `int`, number of jobs to run in parallel. Default is 1. 
     * param_resample_events: `2D array, shape (n_events, 3)`, optional, an optional event matrix. Default is `None`.
     * param_resample_pad: `str`, the type of padding to use. Default is 'reflect_limited'. 

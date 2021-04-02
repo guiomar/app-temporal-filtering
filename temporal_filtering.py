@@ -335,7 +335,7 @@ def main():
     # Info message about filtering
 
     # Band pass filter
-    comments_about_filtering = ''
+    # comments_about_filtering = ''
     if config['param_filter_l_freq'] is not None and config['param_filter_h_freq'] is not None:
         comments_about_filtering = f'Data was filtered between ' \
                                    f'{config["param_filter_l_freq"]} ' \
