@@ -6,7 +6,7 @@
 	"param_filter_length": "auto",
 	"param_filter_l_trans_bandwidth": "auto",
 	"param_filter_h_trans_bandwidth": "auto",
-	"param_fitler_n_jobs": 1,
+	"param_filter_n_jobs": 1,
 	"param_filter_method": "fir",
 	"param_filter_iir_params": null,
 	"param_filter_phase": "zero",
