@@ -1,5 +1,5 @@
 {
-    "fif": "/network/lustre/iss01/home/aurore.bussalb/Repositories/app-maxfilter/out_dir_maxfilter/raw_sss.fif",
+    "fif": "/network/lustre/iss01/home/aurore.bussalb/Repositories/app-maxfilter/out_dir_maxfilter/meg.fif",
     "param_filter_l_freq": 0.5,
 	"param_filter_h_freq": 150,
 	"param_filter_picks": null,
