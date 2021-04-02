@@ -392,12 +392,12 @@ def main():
             config['param_notch_widths'] = None  # when App is run on Bl, no value for this parameter corresponds to ''  
 
         # iir parameters
-        if config['param_notch_iir_params'] == "":
-            config['param_notch_iir_params'] = None  # when App is run on Bl, no value for this parameter corresponds to ''  
+        if config['param_notch_iir_parameters'] == "":
+            config['param_notch_iir_parameters'] = None  # when App is run on Bl, no value for this parameter corresponds to ''  
 
         # mt bandwidth
-        if config['param_mt_bandwidt'] == "":
-            config['param_mt_bandwidth'] = None  # when App is run on Bl, no value for this parameter corresponds to ''         
+        if config['param_notch_mt_bandwidth'] == "":
+            config['param_notch_mt_bandwidth'] = None  # when App is run on Bl, no value for this parameter corresponds to ''         
 
     else:
         comments_notch = 'No Notch filter was applied'
