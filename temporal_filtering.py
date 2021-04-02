@@ -332,28 +332,49 @@ def main():
     data_file = config.pop('fif')
     raw = mne.io.read_raw_fif(data_file, allow_maxshield=True)
 
+    # Check for None parameters for lowpass, highpass, or band pass filter
+    
+    # l_freq
+    param_filter_l_freq = config.pop('param_filter_l_freq')
+    if param_filter_l_freq == "":
+        param_filter_l_freq = None  # when App is run on Bl, no value for this parameter corresponds to ''
+    
+    # h_freq
+    param_filter_h_freq = config.pop('param_filter_h_freq')
+    if param_filter_h_freq == "":
+        param_filter_h_freq = None  # when App is run on Bl, no value for this parameter corresponds to ''
+
+    # picks
+    param_filter_picks = config.pop('param_filter_picks')
+    if param_filter_picks == "":
+        param_filter_picks = None  # when App is run on Bl, no value for this parameter corresponds to ''
+
+    # iir parameters
+    param_filter_iir_params = config.pop('param_filter_iir_params')
+    if param_filter_iir_params == "":
+        param_filter_iir_params = None  # when App is run on Bl, no value for this parameter corresponds to ''
+
     # Info message about filtering
 
     # Band pass filter
-    # comments_about_filtering = ''
-    if config['param_filter_l_freq'] is not None and config['param_filter_h_freq'] is not None:
+    if param_filter_l_freq is not None and param_filter_h_freq is not None:
         comments_about_filtering = f'Data was filtered between ' \
-                                   f'{config["param_filter_l_freq"]} ' \
-                                   f'and {config["param_filter_h_freq"]}Hz'
+                                   f'{param_filter_l_freq} ' \
+                                   f'and {param_filter_h_freq}Hz'
         dict_json_product['brainlife'].append({'type': 'info', 'msg': comments_about_filtering})
 
     # Lowpass filter
-    elif config['param_filter_l_freq'] is None and config['param_filter_h_freq'] is not None:
-        comments_about_filtering = f'Lowpass filter was applied at {config["param_filter_h_freq"]}Hz'
+    elif param_filter_l_freq is None and param_filter_h_freq is not None:
+        comments_about_filtering = f'Lowpass filter was applied at {param_filter_h_freq}Hz'
         dict_json_product['brainlife'].append({'type': 'info', 'msg': comments_about_filtering})
 
     # Highpass filter
-    elif config['param_filter_l_freq'] is not None and config['param_filter_h_freq'] is None:
-        comments_about_filtering = f'Highpass filter was applied at {config["param_filter_l_freq"]}Hz'
+    elif param_filter_l_freq is not None and param_filter_h_freq is None:
+        comments_about_filtering = f'Highpass filter was applied at {param_filter_l_freq}Hz'
         dict_json_product['brainlife'].append({'type': 'info', 'msg': comments_about_filtering})
 
     # Raise an exception if both param_filter_l_freq and param_filter_h_freq are None
-    elif config['param_filter_l_freq'] is None and config['param_filter_h_freq'] is None:
+    elif param_filter_l_freq is None and param_filter_h_freq is None:
         value_error_message = f'You must specify a value for param_filter_l_freq or param_filter_h_freq, ' \
                               f"they can't both be set to None"
         # Raise exception
@@ -389,11 +410,11 @@ def main():
 
     # Apply temporal filtering
     raw_copy = raw.copy()
-    raw_filtered = temporal_filtering(raw_copy, config['param_filter_l_freq'], config['param_filter_h_freq'],
-                                      config['param_filter_picks'], config['param_filter_length'],
+    raw_filtered = temporal_filtering(raw_copy, param_filter_l_freq, param_filter_h_freq,
+                                      param_filter_picks, config['param_filter_length'],
                                       config['param_filter_l_trans_bandwidth'],
                                       config['param_filter_h_trans_bandwidth'], config['param_filer_n_jobs'],
-                                      config['param_filter_method'], config['param_filter_iir_params'],
+                                      config['param_filter_method'], param_filter_iir_params,
                                       config['param_filter_phase'], config['param_filter_fir_window'],
                                       config['param_filter_fir_design'], config['param_filter_skip_by_annotation'],
                                       config['param_filter_pad'], config['param_apply_notch'],
