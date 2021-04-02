@@ -335,46 +335,42 @@ def main():
     # Check for None parameters for lowpass, highpass, or band pass filter
     
     # l_freq
-    param_filter_l_freq = config.pop('param_filter_l_freq')
-    if param_filter_l_freq == "":
-        param_filter_l_freq = None  # when App is run on Bl, no value for this parameter corresponds to ''
+    if config['param_filter_l_freq'] == "":
+        config['param_filter_l_freq'] = None  # when App is run on Bl, no value for this parameter corresponds to ''
     
     # h_freq
-    param_filter_h_freq = config.pop('param_filter_h_freq')
-    if param_filter_h_freq == "":
-        param_filter_h_freq = None  # when App is run on Bl, no value for this parameter corresponds to ''
+    if config['param_filter_h_freq'] == "":
+        config['param_filter_h_freq'] = None  # when App is run on Bl, no value for this parameter corresponds to ''
 
     # picks
-    param_filter_picks = config.pop('param_filter_picks')
-    if param_filter_picks == "":
-        param_filter_picks = None  # when App is run on Bl, no value for this parameter corresponds to ''
+    if config['param_filter_picks'] == "":
+        config['param_filter_picks'] = None  # when App is run on Bl, no value for this parameter corresponds to ''
 
     # iir parameters
-    param_filter_iir_params = config.pop('param_filter_iir_params')
-    if param_filter_iir_params == "":
-        param_filter_iir_params = None  # when App is run on Bl, no value for this parameter corresponds to ''
+    if config['param_filter_iir_params'] == "":
+        config['param_filter_iir_params'] = None  # when App is run on Bl, no value for this parameter corresponds to ''
 
     # Info message about filtering
 
     # Band pass filter
-    if param_filter_l_freq is not None and param_filter_h_freq is not None:
+    if config['param_filter_l_freq'] is not None and config['param_filter_h_freq'] is not None:
         comments_about_filtering = f'Data was filtered between ' \
-                                   f'{param_filter_l_freq} ' \
-                                   f'and {param_filter_h_freq}Hz'
+                                   f'{config['param_filter_l_freq']} ' \
+                                   f'and {config['param_filter_h_freq']}Hz'
         dict_json_product['brainlife'].append({'type': 'info', 'msg': comments_about_filtering})
 
     # Lowpass filter
-    elif param_filter_l_freq is None and param_filter_h_freq is not None:
-        comments_about_filtering = f'Lowpass filter was applied at {param_filter_h_freq}Hz'
+    elif config['param_filter_l_freq'] is None and config['param_filter_h_freq'] is not None:
+        comments_about_filtering = f'Lowpass filter was applied at {config['param_filter_h_freq']}Hz'
         dict_json_product['brainlife'].append({'type': 'info', 'msg': comments_about_filtering})
 
     # Highpass filter
-    elif param_filter_l_freq is not None and param_filter_h_freq is None:
-        comments_about_filtering = f'Highpass filter was applied at {param_filter_l_freq}Hz'
+    elif config['param_filter_l_freq'] is not None and config['param_filter_h_freq'] is None:
+        comments_about_filtering = f'Highpass filter was applied at {config['param_filter_l_freq']}Hz'
         dict_json_product['brainlife'].append({'type': 'info', 'msg': comments_about_filtering})
 
     # Raise an exception if both param_filter_l_freq and param_filter_h_freq are None
-    elif param_filter_l_freq is None and param_filter_h_freq is None:
+    elif config['param_filter_l_freq'] is None and config['param_filter_h_freq'] is None:
         value_error_message = f'You must specify a value for param_filter_l_freq or param_filter_h_freq, ' \
                               f"they can't both be set to None"
         # Raise exception
@@ -384,6 +380,25 @@ def main():
     if config['param_apply_notch'] is True:
         dict_json_product['brainlife'].append({'type': 'info', 'msg': 'Notch filter was applied.'})
         comments_notch = f"{config['param_notch_freqs_start']}Hz and its harmonics"
+
+        # Check for None parameters 
+
+        # picks 
+        if config['param_notch_picks'] == "":
+            param_notch_picks = None  # when App is run on Bl, no value for this parameter corresponds to ''
+
+        # notch widths
+        if config['param_notch_widths'] == "":
+            config['param_notch_widths'] = None  # when App is run on Bl, no value for this parameter corresponds to ''  
+
+        # iir parameters
+        if config['param_notch_iir_params'] == "":
+            config['param_notch_iir_params'] = None  # when App is run on Bl, no value for this parameter corresponds to ''  
+
+        # mt bandwidth
+        if config['param_mt_bandwidt'] == "":
+            config['param_mt_bandwidth'] = None  # when App is run on Bl, no value for this parameter corresponds to ''         
+
     else:
         comments_notch = 'No Notch filter was applied'
 
@@ -397,6 +412,16 @@ def main():
                                                                           f'downsampled data, but instead epoch '
                                                                           f'and then downsample.'})
             comments_resample_freq = f'{config["param_resample_sfreq"]}Hz'
+
+            # Check for None parameters
+
+            # stim picks
+            if config['param_resample_stim_picks'] == "":
+              config['param_resample_stim_picks'] = None  # when App is run on Bl, no value for this parameter corresponds to ''  
+
+            if config['param_resample_events'] == "":
+              config['param_resample_events'] == None  # when App is run on Bl, no value for this parameter corresponds to '' 
+            
         else:
             value_error_message = f"You must specify a value for param_resample_sfreq. If you don't want to resample " \
                                   f'your data, please set param_apply_resample to False.'
@@ -410,11 +435,11 @@ def main():
 
     # Apply temporal filtering
     raw_copy = raw.copy()
-    raw_filtered = temporal_filtering(raw_copy, param_filter_l_freq, param_filter_h_freq,
-                                      param_filter_picks, config['param_filter_length'],
+    raw_filtered = temporal_filtering(raw_copy, config['param_filter_l_freq'], config['param_filter_h_freq'],
+                                      config['param_filter_picks'], config['param_filter_length'],
                                       config['param_filter_l_trans_bandwidth'],
                                       config['param_filter_h_trans_bandwidth'], config['param_filer_n_jobs'],
-                                      config['param_filter_method'], param_filter_iir_params,
+                                      config['param_filter_method'], config['param_filter_iir_params'],
                                       config['param_filter_phase'], config['param_filter_fir_window'],
                                       config['param_filter_fir_design'], config['param_filter_skip_by_annotation'],
                                       config['param_filter_pad'], config['param_apply_notch'],
