@@ -419,7 +419,7 @@ def main():
               config['param_resample_stim_picks'] = None  # when App is run on Bl, no value for this parameter corresponds to ''  
 
             if config['param_resample_events'] == "":
-              config['param_resample_events'] == None  # when App is run on Bl, no value for this parameter corresponds to '' 
+              config['param_resample_events'] = None  # when App is run on Bl, no value for this parameter corresponds to '' 
             
         else:
             value_error_message = f"You must specify a value for param_resample_sfreq. If you don't want to resample " \
