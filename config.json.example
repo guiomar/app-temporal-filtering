@@ -31,7 +31,7 @@
 	"param_notch_fir_window": "hamming",
 	"param_notch_fir_design": "firwin",
 	"param_notch_pad": "reflect_limited",
-	"param_apply_resample": false,
+	"param_apply_resample": true,
 	"param_resample_sfreq": 512,
 	"param_resample_npad": "auto",
 	"param_resample_window": "boxcar",
