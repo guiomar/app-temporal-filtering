@@ -383,9 +383,16 @@ def main():
 
         # Check for None parameters 
 
-        # picks 
+        # picks filter
+        if config['param_filter_picks'] == "":
+            config['param_filter_picks'] = None  # when App is run on Bl, no value for this parameter corresponds to ''
+
+        if config['param_filter_iir_params'] == "":
+            config['param_filter_iir_param'] = None  # when App is run on Bl, no value for this parameter corresponds to ''
+
+        # picks notch
         if config['param_notch_picks'] == "":
-            param_notch_picks = None  # when App is run on Bl, no value for this parameter corresponds to ''
+            config['param_notch_picks'] = None  # when App is run on Bl, no value for this parameter corresponds to ''
 
         # notch widths
         if config['param_notch_widths'] == "":
