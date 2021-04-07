@@ -198,7 +198,6 @@ def _generate_report(data_file_before, raw_before_preprocessing, raw_after_prepr
     fig_raw_maxfilter_psd = raw_after_preprocessing.plot_psd()
 
     # Add figures to report
-    # Add figures to report
     report.add_figs_to_section(fig_raw, captions='MEG signals before filtering', section='Temporal domain')
     report.add_figs_to_section(fig_raw_maxfilter, captions='MEG signals after filtering',
                                comments=comments_about_filtering,
