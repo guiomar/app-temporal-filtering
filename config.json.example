@@ -31,7 +31,6 @@
 	"param_notch_fir_window": "hamming",
 	"param_notch_fir_design": "firwin",
 	"param_notch_pad": "reflect_limited",
-	"param_apply_resample": true
 }
 
 
