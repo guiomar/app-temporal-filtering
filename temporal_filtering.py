@@ -397,7 +397,7 @@ def main():
 
     # Generate a report
     _generate_report(data_file, raw, raw_filtered, bad_channels, comments_about_filtering,
-                     comments_notch, comments_resample_freq, snr_before, snr_after)
+                     comments_notch, snr_before, snr_after)
 
     # Save the dict_json_product in a json file
     with open('product.json', 'w') as outfile:
