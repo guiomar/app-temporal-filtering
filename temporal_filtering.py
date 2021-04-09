@@ -156,7 +156,7 @@ def _compute_snr(meg_file):
 
 
 def _generate_report(data_file_before, raw_before_preprocessing, raw_after_preprocessing, bad_channels,
-                     comments_about_filtering, notch_freqs_start, resample_sfreq, snr_before, snr_after):
+                     comments_about_filtering, notch_freqs_start, snr_before, snr_after):
     # Generate a report
 
     # Instance of mne.Report
