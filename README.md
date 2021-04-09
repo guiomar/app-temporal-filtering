@@ -1,14 +1,13 @@
 # app-temporal-filtering
 
 This is a draft of a future Brainlife App that filters MEG signals using the MNE functions: 
-[`mne.io.Raw.filter`](https://mne.tools/stable/generated/mne.io.Raw.html#mne.io.Raw.filter), 
-[`mne.io.Raw.notch_filter`](https://mne.tools/stable/generated/mne.io.Raw.html#mne.io.Raw.notch_filter), 
-[`mne.io.Raw.resample`](https://mne.tools/stable/generated/mne.io.Raw.html#mne.io.Raw.resample).
+[`mne.io.Raw.filter`](https://mne.tools/stable/generated/mne.io.Raw.html#mne.io.Raw.filter) and 
+[`mne.io.Raw.notch_filter`](https://mne.tools/stable/generated/mne.io.Raw.html#mne.io.Raw.notch_filter).
 
 # app-temporal-filtering documentation
 
 1) Filter MEG signals
-2) First, apply a bandpass, highpass, or lowpass filter, then optionally apply a notch filter and resample the data  
+2) First, apply a bandpass, highpass, or lowpass filter, then optionally apply a notch filter 
 3) Input file is:
     * a MEG file in `.fif` format,
 4) Input parameters are:
@@ -46,15 +45,7 @@ This is a draft of a future Brainlife App that filters MEG signals using the MNE
     * notch_fir_window: `str`, the window to use in FIR design. Default is 'hamming'.
     * notch_fir_design: `str`. Default is 'firwin'.
     * notch_pad: `str`, the type of padding to use. Default is 'reflect_limited'.
-    * apply_resample: `bool`, if True resample the data. Default is `True`.
-    * param_resample_sfreq: `float`, new sample rate to use.
-    * param_resample_npad: `int` or `str`, amount to pad the start and end of the data. Default is 'auto'.
-    * param_resample_window: `str`, frequency-domain window to use in resampling. Default is `boxcar`. 
-    * param_resample_stim_picks: `list of /*int` or `None`, stim channels. Default is `None`.
-    * param_resample_n_jobs: `int`, number of jobs to run in parallel. Default is 1. 
-    * param_resample_events: `2D array, shape (n_events, 3)`, optional, an optional event matrix. Default is `None`.
-    * param_resample_pad: `str`, the type of padding to use. Default is 'reflect_limited'. 
-
+ 
 This list along with the parameters' default values correspond to the 0.22.0 version of MNE Python.  
 
 5) Ouput files are:

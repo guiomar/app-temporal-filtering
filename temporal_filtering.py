@@ -12,9 +12,7 @@ def temporal_filtering(raw, param_filter_l_freq, param_filter_h_freq, param_filt
                        param_notch_freqs_start, param_notch_freqs_end, param_notch_freqs_step, param_notch_picks,
                        param_notch_filter_length, param_notch_widths, param_notch_trans_bandwidth, param_notch_n_jobs,
                        param_notch_method, param_notch_iir_parameters, param_notch_mt_bandwidth, param_notch_p_value,
-                       param_notch_phase, param_notch_fir_window, param_notch_fir_design, param_notch_pad,
-                       param_apply_resample, param_resample_sfreq, param_resample_npad, param_resample_window,
-                       param_resample_stim_picks, param_resample_n_jobs, param_resample_events, param_resample_pad):
+                       param_notch_phase, param_notch_fir_window, param_notch_fir_design, param_notch_pad):
     """Perform filtering using MNE Python and save the file once filtered.
 
     Parameters
@@ -95,22 +93,6 @@ def temporal_filtering(raw, param_filter_l_freq, param_filter_h_freq, param_filt
         Can be “firwin” (default) or “firwin2”.
     param_notch_pad: str
         The type of padding to use. Supports all numpy.pad() mode options. Can also be “reflect_limited” (default).
-    param_apply_resample: bool
-        If True resample the data.
-    param_resample_sfreq: float
-        New sample rate to use.
-    param_resample_npad: int or str
-        Amount to pad the start and end of the data. Can be “auto” (default).
-    param_resample_window: str
-        Frequency-domain window to use in resampling. 
-    param_resample_stim_picks: list of int or None
-        Stim channels.
-    param_resample_n_jobs: int
-        Number of jobs to run in parallel.
-    param_resample_events: 2D array, shape (n_events, 3) or None
-        An optional event matrix. 
-    param_resample_pad: str
-        The type of padding to use. Supports all numpy.pad() mode options. Can also be “reflect_limited” (default).
 
     Returns
     -------
@@ -139,12 +121,6 @@ def temporal_filtering(raw, param_filter_l_freq, param_filter_h_freq, param_filt
                                   mt_bandwidth=param_notch_mt_bandwidth, p_value=param_notch_p_value,
                                   phase=param_notch_phase, fir_window=param_notch_fir_window,
                                   fir_design=param_notch_fir_design, pad=param_notch_pad)
-
-    # Resample
-    if param_apply_resample is True:
-        raw_filtered.resample(sfreq=param_resample_sfreq, npad=param_resample_npad, window=param_resample_window,
-                              stim_picks=param_resample_stim_picks, n_jobs=param_resample_n_jobs,
-                              events=param_resample_events, pad=param_resample_pad)
 
     # Save file
     raw.save("out_dir_temporal_filtering/meg.fif", overwrite=True)
@@ -299,9 +275,6 @@ def _generate_report(data_file_before, raw_before_preprocessing, raw_after_prepr
             <tr>
                 <td>Notch: {notch_freqs_start}</td>
             </tr>
-            <tr>
-                <td>Resampling: {resample_sfreq}</td>
-            </tr>
         </table>
     </body>
 
@@ -400,34 +373,6 @@ def main():
 
     else:
         comments_notch = 'No Notch filter was applied'
-
-    # Info message about resampling if applied
-    if config['param_apply_resample'] is True:
-        if config['param_resample_sfreq'] is not None:
-            dict_json_product['brainlife'].append({'type': 'info', 'msg': f'Data was resampled at '
-                                                                          f'{config["param_resample_sfreq"]}. '
-                                                                          f'Please bear in mind that it is generally '
-                                                                          f'recommended not to epoch '
-                                                                          f'downsampled data, but instead epoch '
-                                                                          f'and then downsample.'})
-            comments_resample_freq = f'{config["param_resample_sfreq"]}Hz'
-
-            # Check for None parameters
-
-            # stim picks
-            if config['param_resample_stim_picks'] == "":
-              config['param_resample_stim_picks'] = None  # when App is run on Bl, no value for this parameter corresponds to ''  
-
-            if config['param_resample_events'] == "":
-              config['param_resample_events'] = None  # when App is run on Bl, no value for this parameter corresponds to '' 
-            
-        else:
-            value_error_message = f"You must specify a value for param_resample_sfreq. If you don't want to resample " \
-                                  f'your data, please set param_apply_resample to False.'
-            # Raise exception
-            raise ValueError(value_error_message)
-    else:
-        comments_resample_freq = 'Data was not resampled'
 
     # Keep bad channels in memory
     bad_channels = raw.info['bads']
