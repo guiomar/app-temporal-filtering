@@ -264,7 +264,7 @@ def main():
 
     # Read the files
     data_file = config.pop('fif')
-    if param_epoched_data is False:
+    if config['param_epoched_data'] is False:
         data = mne.io.read_raw_fif(data_file, allow_maxshield=True)
     else:
         data = mne.read_epochs(data_file)
