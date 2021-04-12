@@ -15,6 +15,8 @@ def temporal_filtering(raw, param_l_freq, param_h_freq, param_picks, param_lengt
     ----------
     raw: instance of mne.io.Raw
         Data to be filtered.
+    param_epoched_data: bool
+        If True, the data to be filtered is epoched, else it is continuous.
     param_l_freq: float or None
         For FIR filters, the lower pass-band edge; for IIR filters, the lower cutoff frequency. If None the 
         data are only low-passed.
@@ -58,16 +60,17 @@ def temporal_filtering(raw, param_l_freq, param_h_freq, param_picks, param_lengt
         The raw data after filtering.
     """
 
-    raw.load_data()
+    if param_epoched_data is False:
+        raw.load_data()
 
-    # Bandpass, lowpass, or highpass filter
-    raw_filtered = raw.filter(l_freq=param_l_freq, h_freq=param_h_freq, 
-                              picks=param_picks, filter_length=param_length,
-                              l_trans_bandwidth=param_l_trans_bandwidth,
-                              h_trans_bandwidth=param_h_trans_bandwidth, n_jobs=param_n_jobs,
-                              method=param_method, iir_params=param_iir_params, phase=param_phase,
-                              fir_window=param_fir_window, fir_design=param_fir_design,
-                              skip_by_annotation=param_skip_by_annotation, pad=param_pad)
+        # Bandpass, lowpass, or highpass filter
+        raw_filtered = raw.filter(l_freq=param_l_freq, h_freq=param_h_freq, 
+                                  picks=param_picks, filter_length=param_length,
+                                  l_trans_bandwidth=param_l_trans_bandwidth,
+                                  h_trans_bandwidth=param_h_trans_bandwidth, n_jobs=param_n_jobs,
+                                  method=param_method, iir_params=param_iir_params, phase=param_phase,
+                                  fir_window=param_fir_window, fir_design=param_fir_design,
+                                  skip_by_annotation=param_skip_by_annotation, pad=param_pad)
 
     # Save file
     raw_filtered.save("out_dir_temporal_filtering/meg.fif", overwrite=True)

@@ -10,6 +10,7 @@ This is a draft of a future Brainlife App that filters MEG signals using the MNE
 3) Input file is:
     * a MEG file in `.fif` format,
 4) Input parameters are:
+    * epoched_data: `bool`, if True, the data to be filtered is epoched, else it is continuous. Default is False.
     * l_freq: `float`, optional, for FIR filters, the lower pass-band edge; for IIR filters, the lower cutoff frequency. If `None` the data are only low-passed.  
     * h_freq: `float`, optional, for FIR filters, the upper pass-band edge; for IIR filters, the upper cutoff frequency. If `None` the data are only high-passed.
     * picks: `str`or `list`, optional, channels to include. Default is `None`.
