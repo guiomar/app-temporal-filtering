@@ -10,22 +10,22 @@ This is a draft of a future Brainlife App that filters MEG signals using the MNE
 3) Input file is:
     * a MEG file in `.fif` format,
 4) Input parameters are:
-    * filter_l_freq: `float`, optional, for FIR filters, the lower pass-band edge; for IIR filters, the lower cutoff frequency. If `None` the data are only low-passed.  
-    * filter_h_freq: `float`, optional, for FIR filters, the upper pass-band edge; for IIR filters, the upper cutoff frequency. If `None` the data are only high-passed.
-    * filter_picks: `str`or `list`, optional, channels to include. Default is `None`.
-    * filter_length: `str`, length of the FIR filter to use in human-readable time units. Default is `auto`. 
-    * filter_l_trans_bandwidth: `float` or `str`, width of the transition band at the low cut-off frequency in Hz. Default is `auto`.
-    * filter_h_trans_bandwidth: `float` or `str`, width of the transition band at the high cut-off frequency in Hz. Default is `auto`.
-    * filter_n_jobs: `int`, number of jobs to run in parallel. Default is 1. 
-    * filter_method: `str`, 'fir' will use overlap-add FIR filtering, 'iir' will use IIR forward-backward filtering. Default is 'fir'.
-    * filter_iir_params: `dict`, optional, dictionary of parameters to use for IIR filtering. To know how to define the dictionary go 
+    * l_freq: `float`, optional, for FIR filters, the lower pass-band edge; for IIR filters, the lower cutoff frequency. If `None` the data are only low-passed.  
+    * h_freq: `float`, optional, for FIR filters, the upper pass-band edge; for IIR filters, the upper cutoff frequency. If `None` the data are only high-passed.
+    * picks: `str`or `list`, optional, channels to include. Default is `None`.
+    * length: `str`, length of the FIR filter to use in human-readable time units. Default is `auto`. 
+    * l_trans_bandwidth: `float` or `str`, width of the transition band at the low cut-off frequency in Hz. Default is `auto`.
+    * h_trans_bandwidth: `float` or `str`, width of the transition band at the high cut-off frequency in Hz. Default is `auto`.
+    * n_jobs: `int`, number of jobs to run in parallel. Default is 1. 
+    * method: `str`, 'fir' will use overlap-add FIR filtering, 'iir' will use IIR forward-backward filtering. Default is 'fir'.
+    * iir_params: `dict`, optional, dictionary of parameters to use for IIR filtering. To know how to define the dictionary go 
         [there](https://mne.tools/stable/generated/mne.filter.construct_iir_filter.html#mne.filter.construct_iir_filter). Default is `None`.
-    * filter_phase: `str`, phase of the filter. Default is 'zero'.
-    * filter_fir_window: `str`, the window to use in FIR design. Default is 'hamming'.
-    * filter_fir_design: `str`. Default is `firwin`.
-    * filter_skip_by_annotation: `str` or `list of str`, if a string (or list of str), any annotation segment that begins with the given string will not be included in
+    * phase: `str`, phase of the filter. Default is 'zero'.
+    * fir_window: `str`, the window to use in FIR design. Default is 'hamming'.
+    * fir_design: `str`. Default is `firwin`.
+    * skip_by_annotation: `str` or `list of str`, if a string (or list of str), any annotation segment that begins with the given string will not be included in
         filtering, and segments on either side of the given excluded annotated segment will be filtered separately. Default is `["edge", bad_acq_skip"]`.
-    * filter_pad: `str`, the type of padding to use. Default is 'reflect_limited'.
+    * pad: `str`, the type of padding to use. Default is 'reflect_limited'.
  
 This list along with the parameters' default values correspond to the 0.22.0 version of MNE Python.  
 

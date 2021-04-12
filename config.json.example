@@ -1,17 +1,18 @@
 {
     "fif": "/network/lustre/iss01/home/aurore.bussalb/Repositories/app-bad-channels/out_dir_bad_channels/meg.fif",
-    "param_filter_l_freq": 0.5,
-	"param_filter_h_freq": 150,
-	"param_filter_picks": null,
-	"param_filter_length": "auto",
-	"param_filter_l_trans_bandwidth": "auto",
-	"param_filter_h_trans_bandwidth": "auto",
-	"param_filter_n_jobs": 1,
-	"param_filter_method": "fir",
-	"param_filter_iir_params": null,
-	"param_filter_phase": "zero",
-	"param_filter_fir_window": "hamming",
-	"param_filter_fir_design": "firwin",
-	"param_filter_skip_by_annotation": ["edge", "bad_acq_skip"],
-	"param_filter_pad": "reflect_limited"
+	"param_epoched_data": False
+    "param_l_freq": 0.5,
+	"param_h_freq": 150,
+	"param_picks": null,
+	"param_length": "auto",
+	"param_l_trans_bandwidth": "auto",
+	"param_h_trans_bandwidth": "auto",
+	"param_n_jobs": 1,
+	"param_method": "fir",
+	"param_iir_params": null,
+	"param_phase": "zero",
+	"param_fir_window": "hamming",
+	"param_fir_design": "firwin",
+	"param_skip_by_annotation": ["edge", "bad_acq_skip"],
+	"param_pad": "reflect_limited"
 }
