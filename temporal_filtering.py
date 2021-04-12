@@ -269,6 +269,11 @@ def main():
     else:
         data = mne.read_epochs(data_file)
 
+    # Read events file 
+    events_file = config.pop('events')
+    if os.path.exists(events_file) is True:
+        shutil.copy2(events_file, 'out_dir_temporal_filtering/events.tsv')  # required to run a pipeline on BL
+
     # Check for None parameters for lowpass, highpass, or band pass filter
     
     # l_freq
