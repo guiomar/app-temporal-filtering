@@ -1,7 +1,7 @@
 # app-temporal-filtering
 
-This is a draft of a future Brainlife App that filters MEG signals using the MNE functions: 
-[`mne.io.Raw.filter`](https://mne.tools/stable/generated/mne.io.Raw.html#mne.io.Raw.filter).
+This is a draft of a future Brainlife App that filters MEG signals using the MNE function: 
+[`mne.io.Raw.filter`](https://mne.tools/stable/generated/mne.io.Raw.html#mne.io.Raw.filter) or [`mne.Epochs.filter`](https://mne.tools/stable/generated/mne.Epochs.html?highlight=mne%20epochs#mne.Epochs.filter).
 
 # app-temporal-filtering documentation
 

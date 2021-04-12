@@ -56,15 +56,30 @@ def temporal_filtering(raw, param_epoched_data, param_l_freq, param_h_freq, para
 
     Returns
     -------
-    raw_filtered: instance of mne.io.Raw
-        The raw data after filtering.
+    raw_filtered: instance of mne.io.Raw or instance of mne.Epochs
+        The filtered data.
     """
 
     if param_epoched_data is False:
+        
+        # Load data
         raw.load_data()
 
         # Bandpass, lowpass, or highpass filter
-        raw_filtered = raw.filter(l_freq=param_l_freq, h_freq=param_h_freq, 
+        data_filtered = raw.filter(l_freq=param_l_freq, h_freq=param_h_freq, 
+                                  picks=param_picks, filter_length=param_length,
+                                  l_trans_bandwidth=param_l_trans_bandwidth,
+                                  h_trans_bandwidth=param_h_trans_bandwidth, n_jobs=param_n_jobs,
+                                  method=param_method, iir_params=param_iir_params, phase=param_phase,
+                                  fir_window=param_fir_window, fir_design=param_fir_design,
+                                  skip_by_annotation=param_skip_by_annotation, pad=param_pad)
+        # Save file
+        data_filtered.save("out_dir_temporal_filtering/meg.fif", overwrite=True)
+
+    else:
+
+        # Bandpass, lowpass, or highpass filter
+        data_filtered = Epochs.filter(l_freq=param_l_freq, h_freq=param_h_freq, 
                                   picks=param_picks, filter_length=param_length,
                                   l_trans_bandwidth=param_l_trans_bandwidth,
                                   h_trans_bandwidth=param_h_trans_bandwidth, n_jobs=param_n_jobs,
@@ -72,10 +87,10 @@ def temporal_filtering(raw, param_epoched_data, param_l_freq, param_h_freq, para
                                   fir_window=param_fir_window, fir_design=param_fir_design,
                                   skip_by_annotation=param_skip_by_annotation, pad=param_pad)
 
-    # Save file
-    raw_filtered.save("out_dir_temporal_filtering/meg.fif", overwrite=True)
+        # Save file
+        data_filtered.save("out_dir_temporal_filtering/meg.fif", overwrite=True)
 
-    return raw_filtered
+    return data_filtered
 
 
 def _compute_snr(meg_file):
@@ -249,7 +264,10 @@ def main():
 
     # Read the files
     data_file = config.pop('fif')
-    raw = mne.io.read_raw_fif(data_file, allow_maxshield=True)
+    if param_epoched_data is False:
+        data = mne.io.read_raw_fif(data_file, allow_maxshield=True)
+    else:
+        data = mne.read_epochs(data_file)
 
     # Check for None parameters for lowpass, highpass, or band pass filter
     
@@ -296,7 +314,7 @@ def main():
         raise ValueError(value_error_message)
 
     # Keep bad channels in memory
-    bad_channels = raw.info['bads']
+    bad_channels = data.info['bads']
 
     # Define kwargs
     # Delete keys values in config.json when this app is executed on Brainlife
@@ -305,19 +323,19 @@ def main():
     kwargs = config  
 
     # Apply temporal filtering
-    raw_copy = raw.copy()
-    raw_filtered = temporal_filtering(raw_copy, **kwargs)
-    del raw_copy
+    data_copy = data.copy()
+    data_filtered = temporal_filtering(data_copy, **kwargs)
+    del data_copy
 
     # Success message in product.json    
     dict_json_product['brainlife'].append({'type': 'success', 'msg': 'Filtering was applied successfully.'})
 
     # Compute SNR
-    snr_before = _compute_snr(raw)
-    snr_after = _compute_snr(raw_filtered)
+    snr_before = _compute_snr(data)
+    snr_after = _compute_snr(data_filtered)
 
     # Generate a report
-    _generate_report(data_file, raw, raw_filtered, bad_channels, comments_about_filtering, snr_before, snr_after)
+    _generate_report(data_file, data, data_filtered, bad_channels, comments_about_filtering, snr_before, snr_after)
 
     # Save the dict_json_product in a json file
     with open('product.json', 'w') as outfile:
