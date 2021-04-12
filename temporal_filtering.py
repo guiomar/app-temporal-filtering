@@ -74,7 +74,7 @@ def temporal_filtering(data, param_epoched_data, param_l_freq, param_h_freq, par
                                   fir_window=param_fir_window, fir_design=param_fir_design,
                                   skip_by_annotation=param_skip_by_annotation, pad=param_pad)
         # Save file
-        data_filtered.save("out_dir_temporal_filtering/meg.fif", overwrite=True)
+        # data_filtered.save("out_dir_temporal_filtering/meg.fif", overwrite=True)
 
     else:
 
@@ -88,7 +88,9 @@ def temporal_filtering(data, param_epoched_data, param_l_freq, param_h_freq, par
                                   skip_by_annotation=param_skip_by_annotation, pad=param_pad)
 
         # Save file
-        data_filtered.save("out_dir_temporal_filtering/meg.fif", overwrite=True)
+        # data_filtered.save("out_dir_temporal_filtering/meg.fif", overwrite=True)
+
+    data_filtered.save("out_dir_temporal_filtering/meg.fif", overwrite=True)
 
     return data_filtered
 
