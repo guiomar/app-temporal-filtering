@@ -60,6 +60,7 @@ def temporal_filtering(data, param_epoched_data, param_l_freq, param_h_freq, par
         The filtered data.
     """
 
+    # For continuous data 
     if param_epoched_data is False:
         
         # Load data
@@ -73,9 +74,8 @@ def temporal_filtering(data, param_epoched_data, param_l_freq, param_h_freq, par
                                   method=param_method, iir_params=param_iir_params, phase=param_phase,
                                   fir_window=param_fir_window, fir_design=param_fir_design,
                                   skip_by_annotation=param_skip_by_annotation, pad=param_pad)
-        # Save file
-        # data_filtered.save("out_dir_temporal_filtering/meg.fif", overwrite=True)
 
+    # For epoched data 
     else:
 
         # Bandpass, lowpass, or highpass filter
@@ -87,9 +87,7 @@ def temporal_filtering(data, param_epoched_data, param_l_freq, param_h_freq, par
                                   fir_window=param_fir_window, fir_design=param_fir_design,
                                   skip_by_annotation=param_skip_by_annotation, pad=param_pad)
 
-        # Save file
-        # data_filtered.save("out_dir_temporal_filtering/meg.fif", overwrite=True)
-
+    # Save file
     data_filtered.save("out_dir_temporal_filtering/meg.fif", overwrite=True)
 
     return data_filtered
