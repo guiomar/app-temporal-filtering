@@ -1,13 +1,12 @@
 # app-temporal-filtering
 
 This is a draft of a future Brainlife App that filters MEG signals using the MNE functions: 
-[`mne.io.Raw.filter`](https://mne.tools/stable/generated/mne.io.Raw.html#mne.io.Raw.filter) and 
-[`mne.io.Raw.notch_filter`](https://mne.tools/stable/generated/mne.io.Raw.html#mne.io.Raw.notch_filter).
+[`mne.io.Raw.filter`](https://mne.tools/stable/generated/mne.io.Raw.html#mne.io.Raw.filter).
 
 # app-temporal-filtering documentation
 
 1) Filter MEG signals
-2) First, apply a bandpass, highpass, or lowpass filter, then optionally apply a notch filter 
+2) Apply a bandpass, highpass, or lowpass filter
 3) Input file is:
     * a MEG file in `.fif` format,
 4) Input parameters are:
@@ -27,24 +26,6 @@ This is a draft of a future Brainlife App that filters MEG signals using the MNE
     * filter_skip_by_annotation: `str` or `list of str`, if a string (or list of str), any annotation segment that begins with the given string will not be included in
         filtering, and segments on either side of the given excluded annotated segment will be filtered separately. Default is `["edge", bad_acq_skip"]`.
     * filter_pad: `str`, the type of padding to use. Default is 'reflect_limited'.
-    * apply_notch: `bool`, if `True`, apply a notch filter. Default is `True`.
-    * notch_freqs_start: `int`, frequency to notch filter in Hz. Default is 50.
-    * notch_freqs_end: `int`, end of the interval (in Hz) of the power lines harmonics to notch filter (this value is excluded). Default is 251.  
-    * notch_freqs_step: `int`, The step in Hz to filter power lines harmonics between param_notch_freqs_start and param_notch_freqs_end. Default is 50.
-    * notch_picks: `str`or `list`, optional, channels to include. Default is `None`. 
-    * notch_filter_length: `str`, length of the FIR filter to use in human-readable time units. Default is `auto`. 
-    * notch_widths: `float`, optional, width of the stop band in Hz. Default is `None`.
-    * notch_trans_bandwidth: `float`, width of the transition band in Hz. Default is 1.0.
-    * notch_n_jobs: `int`, number of jobs to run in parallel. Default is 1.
-    * notch_method: `str`, 'fir' will use overlap-add FIR filtering, 'iir' will use IIR forward-backward filtering. Default is 'fir'.
-    * notch_iir_params: `dict`, optional, dictionary of parameters to use for IIR filtering. To know how to define the dictionary go 
-        [there](https://mne.tools/stable/generated/mne.filter.construct_iir_filter.html#mne.filter.construct_iir_filter). Default is `None`. 
-    * notch_mt_bandwidth: `float`, optional, the bandwidth of the multitaper windowing function in Hz. Default is `None`.
-    * notch_p_value: `float`, p-value to use in F-test thresholding to determine significant sinusoidal components. Default is 0.05.
-    * notch_phase: `str`, phase of the filter, only used if method='fir'. Default is 'zero'.
-    * notch_fir_window: `str`, the window to use in FIR design. Default is 'hamming'.
-    * notch_fir_design: `str`. Default is 'firwin'.
-    * notch_pad: `str`, the type of padding to use. Default is 'reflect_limited'.
  
 This list along with the parameters' default values correspond to the 0.22.0 version of MNE Python.  
 
