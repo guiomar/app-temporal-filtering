@@ -5,7 +5,7 @@ import mne
 import numpy as np
 
 
-def temporal_filtering(raw, param_epoched_data, param_l_freq, param_h_freq, param_picks, param_length,
+def temporal_filtering(data, param_epoched_data, param_l_freq, param_h_freq, param_picks, param_length,
                        param_l_trans_bandwidth, param_h_trans_bandwidth, param_n_jobs,
                        param_method, param_iir_params, param_phase, param_fir_window,
                        param_fir_design, param_skip_by_annotation, param_pad):
@@ -13,7 +13,7 @@ def temporal_filtering(raw, param_epoched_data, param_l_freq, param_h_freq, para
 
     Parameters
     ----------
-    raw: instance of mne.io.Raw
+    data: instance of mne.io.Raw or instance of mne.Epochs
         Data to be filtered.
     param_epoched_data: bool
         If True, the data to be filtered is epoched, else it is continuous.
@@ -63,10 +63,10 @@ def temporal_filtering(raw, param_epoched_data, param_l_freq, param_h_freq, para
     if param_epoched_data is False:
         
         # Load data
-        raw.load_data()
+        data.load_data()
 
         # Bandpass, lowpass, or highpass filter
-        data_filtered = raw.filter(l_freq=param_l_freq, h_freq=param_h_freq, 
+        data_filtered = data.filter(l_freq=param_l_freq, h_freq=param_h_freq, 
                                   picks=param_picks, filter_length=param_length,
                                   l_trans_bandwidth=param_l_trans_bandwidth,
                                   h_trans_bandwidth=param_h_trans_bandwidth, n_jobs=param_n_jobs,
@@ -79,7 +79,7 @@ def temporal_filtering(raw, param_epoched_data, param_l_freq, param_h_freq, para
     else:
 
         # Bandpass, lowpass, or highpass filter
-        data_filtered = Epochs.filter(l_freq=param_l_freq, h_freq=param_h_freq, 
+        data_filtered = data.filter(l_freq=param_l_freq, h_freq=param_h_freq, 
                                   picks=param_picks, filter_length=param_length,
                                   l_trans_bandwidth=param_l_trans_bandwidth,
                                   h_trans_bandwidth=param_h_trans_bandwidth, n_jobs=param_n_jobs,
