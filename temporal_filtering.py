@@ -5,7 +5,7 @@ import mne
 import numpy as np
 
 
-def temporal_filtering(raw, param_l_freq, param_h_freq, param_picks, param_length,
+def temporal_filtering(raw, param_epoched_data, param_l_freq, param_h_freq, param_picks, param_length,
                        param_l_trans_bandwidth, param_h_trans_bandwidth, param_n_jobs,
                        param_method, param_iir_params, param_phase, param_fir_window,
                        param_fir_design, param_skip_by_annotation, param_pad):
