@@ -15,9 +15,3 @@
 	"param_filter_skip_by_annotation": ["edge", "bad_acq_skip"],
 	"param_filter_pad": "reflect_limited"
 }
-
-
-
-					   
-					   
-					   
