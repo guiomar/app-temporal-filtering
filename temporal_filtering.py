@@ -331,11 +331,11 @@ def main():
     dict_json_product['brainlife'].append({'type': 'success', 'msg': 'Filtering was applied successfully.'})
 
     # Compute SNR
-    snr_before = _compute_snr(data)
-    snr_after = _compute_snr(data_filtered)
+    #snr_before = _compute_snr(data)
+    #snr_after = _compute_snr(data_filtered)
 
     # Generate a report
-    _generate_report(data_file, data, data_filtered, bad_channels, comments_about_filtering, snr_before, snr_after)
+    #_generate_report(data_file, data, data_filtered, bad_channels, comments_about_filtering, snr_before, snr_after)
 
     # Save the dict_json_product in a json file
     with open('product.json', 'w') as outfile:
