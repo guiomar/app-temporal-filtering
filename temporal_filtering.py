@@ -3,6 +3,7 @@
 import json
 import mne
 import numpy as np
+import os
 
 
 def temporal_filtering(data, param_epoched_data, param_l_freq, param_h_freq, param_picks, param_length,
