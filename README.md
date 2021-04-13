@@ -26,7 +26,7 @@ This is a draft of a future Brainlife App that filters MEG signals using the MNE
     * fir_design: `str`. Default is `firwin`.
     * skip_by_annotation: `str` or `list of str`, if a string (or list of str), any annotation segment that begins with the given string will not be included in
         filtering, and segments on either side of the given excluded annotated segment will be filtered separately. Default is `["edge", bad_acq_skip"]`.
-    * pad: `str`, the type of padding to use. Default is 'reflect_limited'.
+    * param_pad: `str`, the type of padding to use for raw data. Default is 'reflect_limited' for raw data and 'edge' for epoch data. 
  
 This list along with the parameters' default values correspond to the 0.22.0 version of MNE Python.  
 

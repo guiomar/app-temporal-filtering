@@ -4,6 +4,7 @@ import json
 import mne
 import numpy as np
 import os
+import shutil
 
 
 def temporal_filtering(data, param_epoched_data, param_l_freq, param_h_freq, param_picks, param_length,
@@ -53,7 +54,8 @@ def temporal_filtering(data, param_epoched_data, param_l_freq, param_h_freq, par
         If a string (or list of str), any annotation segment that begins with the given string will not be included in
         filtering, and segments on either side of the given excluded annotated segment will be filtered separately.
     param_pad: str
-        The type of padding to use. Supports all numpy.pad() mode options. Can also be “reflect_limited” (default).
+        The type of padding to use. Supports all numpy.pad() mode options. Can also be 
+        “reflect_limited” (default for raw data) and "edge" (default for epoched data).
 
     Returns
     -------
@@ -69,24 +71,24 @@ def temporal_filtering(data, param_epoched_data, param_l_freq, param_h_freq, par
 
         # Bandpass, lowpass, or highpass filter
         data_filtered = data.filter(l_freq=param_l_freq, h_freq=param_h_freq, 
-                                  picks=param_picks, filter_length=param_length,
-                                  l_trans_bandwidth=param_l_trans_bandwidth,
-                                  h_trans_bandwidth=param_h_trans_bandwidth, n_jobs=param_n_jobs,
-                                  method=param_method, iir_params=param_iir_params, phase=param_phase,
-                                  fir_window=param_fir_window, fir_design=param_fir_design,
-                                  skip_by_annotation=param_skip_by_annotation, pad=param_pad)
+                                    picks=param_picks, filter_length=param_length,
+                                    l_trans_bandwidth=param_l_trans_bandwidth,
+                                    h_trans_bandwidth=param_h_trans_bandwidth, n_jobs=param_n_jobs,
+                                    method=param_method, iir_params=param_iir_params, phase=param_phase,
+                                    fir_window=param_fir_window, fir_design=param_fir_design,
+                                    skip_by_annotation=param_skip_by_annotation, pad=param_pad)
 
     # For epoched data 
     else:
 
         # Bandpass, lowpass, or highpass filter
         data_filtered = data.filter(l_freq=param_l_freq, h_freq=param_h_freq, 
-                                  picks=param_picks, filter_length=param_length,
-                                  l_trans_bandwidth=param_l_trans_bandwidth,
-                                  h_trans_bandwidth=param_h_trans_bandwidth, n_jobs=param_n_jobs,
-                                  method=param_method, iir_params=param_iir_params, phase=param_phase,
-                                  fir_window=param_fir_window, fir_design=param_fir_design,
-                                  skip_by_annotation=param_skip_by_annotation, pad=param_pad)
+                                    picks=param_picks, filter_length=param_length,
+                                    l_trans_bandwidth=param_l_trans_bandwidth,
+                                    h_trans_bandwidth=param_h_trans_bandwidth, n_jobs=param_n_jobs,
+                                    method=param_method, iir_params=param_iir_params, phase=param_phase,
+                                    fir_window=param_fir_window, fir_design=param_fir_design,
+                                    skip_by_annotation=param_skip_by_annotation, pad=param_pad)
 
     # Save file
     data_filtered.save("out_dir_temporal_filtering/meg.fif", overwrite=True)
