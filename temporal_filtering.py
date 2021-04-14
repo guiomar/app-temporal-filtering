@@ -272,6 +272,26 @@ def main():
     else:
         data = mne.read_epochs(data_file)
 
+    # Read the crosstalk file
+    cross_talk_file = config.pop('crosstalk')
+    if os.path.exists(cross_talk_file) is True:
+        shutil.copy2(cross_talk_file, 'out_dir_temporal_filtering/crosstalk_meg.fif')  # required to run a pipeline on BL
+
+    # Read the calibration file
+    calibration_file = config.pop('calibration')
+    if os.path.exists(calibration_file) is True:
+        shutil.copy2(calibration_file, 'out_dir_temporal_filtering/calibration_meg.dat')  # required to run a pipeline on BL
+
+    # Read destination file 
+    destination_file = config.pop('destination')
+    if os.path.exists(destination_file) is True:
+        shutil.copy2(destination_file, 'out_dir_temporal_filtering/destination.fif')  # required to run a pipeline on BL
+
+    # Read head pos file
+    head_pos = config.pop('headshape')
+    if os.path.exists(head_pos) is True:
+        shutil.copy2(head_pos, 'out_dir_temporal_filtering/headshape.pos')  # required to run a pipeline on BL
+
     # Read events file 
     events_file = config.pop('events')
     if os.path.exists(events_file) is True:

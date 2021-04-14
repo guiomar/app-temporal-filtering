@@ -1,6 +1,6 @@
 # app-temporal-filtering
 
-This is a draft of a future Brainlife App that filters MEG signals using the MNE function: 
+Repository of a Brainlife App that filters raw or epoched MEG signals using the MNE function: 
 [`mne.io.Raw.filter`](https://mne.tools/stable/generated/mne.io.Raw.html#mne.io.Raw.filter) or [`mne.Epochs.filter`](https://mne.tools/stable/generated/mne.Epochs.html?highlight=mne%20epochs#mne.Epochs.filter).
 
 # app-temporal-filtering documentation
@@ -12,19 +12,19 @@ This is a draft of a future Brainlife App that filters MEG signals using the MNE
 4) Input parameters are:
     * epoched_data: `bool`, if True, the data to be filtered is epoched, else it is continuous. Default is False.
     * l_freq: `float`, optional, for FIR filters, the lower pass-band edge; for IIR filters, the lower cutoff frequency. If `None` the data are only low-passed.  
-    * h_freq: `float`, optional, for FIR filters, the upper pass-band edge; for IIR filters, the upper cutoff frequency. If `None` the data are only high-passed.
-    * picks: `str`or `list`, optional, channels to include. Default is `None`.
-    * length: `str`, length of the FIR filter to use in human-readable time units. Default is `auto`. 
-    * l_trans_bandwidth: `float` or `str`, width of the transition band at the low cut-off frequency in Hz. Default is `auto`.
-    * h_trans_bandwidth: `float` or `str`, width of the transition band at the high cut-off frequency in Hz. Default is `auto`.
-    * n_jobs: `int`, number of jobs to run in parallel. Default is 1. 
-    * method: `str`, 'fir' will use overlap-add FIR filtering, 'iir' will use IIR forward-backward filtering. Default is 'fir'.
-    * iir_params: `dict`, optional, dictionary of parameters to use for IIR filtering. To know how to define the dictionary go 
+    * param_h_freq: `float`, optional, for FIR filters, the upper pass-band edge; for IIR filters, the upper cutoff frequency. If `None` the data are only high-passed.
+    * param_picks: `str`or `list`, optional, channels to include. Default is `None`.
+    * param_length: `str`, length of the FIR filter to use in human-readable time units. Default is `auto`. 
+    * param_l_trans_bandwidth: `float` or `str`, width of the transition band at the low cut-off frequency in Hz. Default is `auto`.
+    * param_h_trans_bandwidth: `float` or `str`, width of the transition band at the high cut-off frequency in Hz. Default is `auto`.
+    * param_n_jobs: `int`, number of jobs to run in parallel. Default is 1. 
+    * param_method: `str`, 'fir' will use overlap-add FIR filtering, 'iir' will use IIR forward-backward filtering. Default is 'fir'.
+    * param_iir_params: `dict`, optional, dictionary of parameters to use for IIR filtering. To know how to define the dictionary go 
         [there](https://mne.tools/stable/generated/mne.filter.construct_iir_filter.html#mne.filter.construct_iir_filter). Default is `None`.
-    * phase: `str`, phase of the filter. Default is 'zero'.
-    * fir_window: `str`, the window to use in FIR design. Default is 'hamming'.
-    * fir_design: `str`. Default is `firwin`.
-    * skip_by_annotation: `str` or `list of str`, if a string (or list of str), any annotation segment that begins with the given string will not be included in
+    * param_phase: `str`, phase of the filter. Default is 'zero'.
+    * param_fir_window: `str`, the window to use in FIR design. Default is 'hamming'.
+    * param_fir_design: `str`. Default is `firwin`.
+    * param_skip_by_annotation: `str` or `list of str`, if a string (or list of str), any annotation segment that begins with the given string will not be included in
         filtering, and segments on either side of the given excluded annotated segment will be filtered separately. Default is `["edge", bad_acq_skip"]`.
     * param_pad: `str`, the type of padding to use for raw data. Default is 'reflect_limited' for raw data and 'edge' for epoch data. 
  
@@ -62,8 +62,8 @@ This App has not yet been registered in Brainlife.io.
 ### Running Locally (on your machine)
 
 1. git clone this repo
-2. Inside the cloned directory, create `config.json` with something like the following content with paths to your input 
-   files and values of the input parameters (see `config.json.example`).
+2. Inside the cloned directory, create `config.json` with the same keys as in `config.json.example` but with paths to your input 
+   files and values of the input parameters. For instance:
 
 ```json
 {
