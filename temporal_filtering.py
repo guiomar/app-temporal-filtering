@@ -53,9 +53,12 @@ def temporal_filtering(data, param_epoched_data, param_l_freq, param_h_freq, par
     param_skip_by_annotation: str or list of str
         If a string (or list of str), any annotation segment that begins with the given string will not be included in
         filtering, and segments on either side of the given excluded annotated segment will be filtered separately.
-    param_pad: str
-        The type of padding to use. Supports all numpy.pad() mode options. Can also be 
-        “reflect_limited” (default for raw data) and "edge" (default for epoched data).
+    param_raw_pad: str
+        The type of padding to use for raw data. Supports all numpy.pad() mode options. Can also be 
+        “reflect_limited” (default) and "edge".
+    param_epoch_pad: str
+        The type of padding to use for epoched data. Supports all numpy.pad() mode options. Can also be 
+        “reflect_limited” and "edge" (default).
 
     Returns
     -------
@@ -76,7 +79,7 @@ def temporal_filtering(data, param_epoched_data, param_l_freq, param_h_freq, par
                                     h_trans_bandwidth=param_h_trans_bandwidth, n_jobs=param_n_jobs,
                                     method=param_method, iir_params=param_iir_params, phase=param_phase,
                                     fir_window=param_fir_window, fir_design=param_fir_design,
-                                    skip_by_annotation=param_skip_by_annotation, pad=param_pad)
+                                    skip_by_annotation=param_skip_by_annotation, pad=param_raw_pad)
 
     # For epoched data 
     else:
@@ -88,7 +91,7 @@ def temporal_filtering(data, param_epoched_data, param_l_freq, param_h_freq, par
                                     h_trans_bandwidth=param_h_trans_bandwidth, n_jobs=param_n_jobs,
                                     method=param_method, iir_params=param_iir_params, phase=param_phase,
                                     fir_window=param_fir_window, fir_design=param_fir_design,
-                                    skip_by_annotation=param_skip_by_annotation, pad=param_pad)
+                                    skip_by_annotation=param_skip_by_annotation, pad=param_epoch_pad)
 
     # Save file
     data_filtered.save("out_dir_temporal_filtering/meg.fif", overwrite=True)

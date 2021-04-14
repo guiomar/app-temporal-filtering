@@ -19,5 +19,6 @@
 	"param_fir_window": "hamming",
 	"param_fir_design": "firwin",
 	"param_skip_by_annotation": ["edge", "bad_acq_skip"],
-	"param_pad": "reflect_limited"
+	"param_raw_pad": "reflect_limited",
+	"param_epoch_pad": "edge"
 }
