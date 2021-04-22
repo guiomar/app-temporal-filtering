@@ -7,7 +7,8 @@ import os
 import shutil
 
 
-def temporal_filtering(data, param_epoched_data, param_l_freq, param_h_freq, param_picks, param_length,
+def temporal_filtering(data, param_epoched_data, param_l_freq, param_h_freq, param_picks_by_channel_types_or_names, 
+                       param_filter_length, param_picks_by_channel_indices,
                        param_l_trans_bandwidth, param_h_trans_bandwidth, param_n_jobs,
                        param_method, param_iir_params, param_phase, param_fir_window,
                        param_fir_design, param_skip_by_annotation, param_raw_pad, param_epoch_pad):
@@ -25,20 +26,28 @@ def temporal_filtering(data, param_epoched_data, param_l_freq, param_h_freq, par
     param_h_freq: float or None
         For FIR filters, the upper pass-band edge; for IIR filters, the upper cutoff frequency. If None the 
         data are only high-passed.
-    param_picks: str, list, or None
-        Channels to include.
-    param_length: str
+    param_picks_by_channel_types_or_names: str, list of str, or None 
+        Channels to include. In lists, channel type strings (e.g., ["meg", "eeg"]) will pick channels of those types, channel name 
+        strings (e.g., ["MEG0111", "MEG2623"]) will pick the given channels. Can also be the string values “all” 
+        to pick all channels, or “data” to pick data channels. None (default) will pick all data channels. Note 
+        that channels in info['bads'] will be included if their names are explicitly provided.
+    param_picks_by_channel_indices: list of int, slice, or None
+        Channels to include. Slices (e.g., "0, 10, 2" or "0, 10" if you don't want a step) and lists of integers 
+        are interpreted as channel indices. None (default) will pick all data channels. This parameter must be set 
+        to None if param_picks_by_channel_types_or_names is not None. Note that channels in info['bads'] will 
+        be included if their indices are explicitly provided.
+    param_filter_length: str or int
         Length of the FIR filter to use (if applicable). Can be ‘auto’ (default) : the filter length is chosen based 
         on the size of the transition regions, or an other str (human-readable time in units of “s” or “ms”: 
-        e.g., “10s” or “5500ms”). 
+        e.g., “10s” or “5500ms”). If int, specified length in samples. For fir_design=”firwin”, this should not be used.
     param_l_trans_bandwidth: float or str
         Width of the transition band at the low cut-off frequency in Hz (high pass or cutoff 1 in bandpass). 
         Can be “auto” (default) to use a multiple of l_freq.     
     param_h_trans_bandwidth: float or str   
         Width of the transition band at the high cut-off frequency in Hz (low pass or cutoff 2 in bandpass). 
         Can be “auto” (default) to use a multiple of h_freq.
-    param_n_jobs: int
-        Number of jobs to run in parallel.
+    param_n_jobs: int or str
+        Number of jobs to run in parallel. Can be ‘cuda’ if cupy is installed properly and method=’fir’.
     param_method: str
         ‘fir’ will use overlap-add FIR filtering, ‘iir’ will use IIR forward-backward filtering (via filtfilt).
     param_iir_params: dict or None
@@ -66,6 +75,21 @@ def temporal_filtering(data, param_epoched_data, param_l_freq, param_h_freq, par
         The filtered data.
     """
 
+    # Raise error if both param picks are not None
+    if param_picks_by_channel_types_or_names is not None and param_picks_by_channel_indices is not None:
+        value_error_message = f"You can't provide values for both " \
+                              f"param_picks_by_channel_types_or_names and " \
+                              f"param_picks_by_channel_indices. One of them must be " \
+                              f"set to None."
+        raise ValueError(value_error_message)
+    # Define param_picks
+    elif param_picks_by_channel_types_or_names is None and param_picks_by_channel_indices is not None:
+        param_picks = param_picks_by_channel_indices
+    elif param_picks_by_channel_types_or_names is not None and param_picks_by_channel_indices is None:
+        param_picks = param_picks_by_channel_types_or_names
+    else:
+        param_picks = None  
+
     # For continuous data 
     if param_epoched_data is False:
         
@@ -74,7 +98,7 @@ def temporal_filtering(data, param_epoched_data, param_l_freq, param_h_freq, par
 
         # Bandpass, lowpass, or highpass filter
         data_filtered = data.filter(l_freq=param_l_freq, h_freq=param_h_freq, 
-                                    picks=param_picks, filter_length=param_length,
+                                    picks=param_picks, filter_length=param_filter_length,
                                     l_trans_bandwidth=param_l_trans_bandwidth,
                                     h_trans_bandwidth=param_h_trans_bandwidth, n_jobs=param_n_jobs,
                                     method=param_method, iir_params=param_iir_params, phase=param_phase,
@@ -86,7 +110,7 @@ def temporal_filtering(data, param_epoched_data, param_l_freq, param_h_freq, par
 
         # Bandpass, lowpass, or highpass filter
         data_filtered = data.filter(l_freq=param_l_freq, h_freq=param_h_freq, 
-                                    picks=param_picks, filter_length=param_length,
+                                    picks=param_picks, filter_length=param_filter_length,
                                     l_trans_bandwidth=param_l_trans_bandwidth,
                                     h_trans_bandwidth=param_h_trans_bandwidth, n_jobs=param_n_jobs,
                                     method=param_method, iir_params=param_iir_params, phase=param_phase,
@@ -300,7 +324,7 @@ def main():
     if os.path.exists(events_file) is True:
         shutil.copy2(events_file, 'out_dir_temporal_filtering/events.tsv')  # required to run a pipeline on BL
 
-    # Check for None parameters for lowpass, highpass, or band pass filter
+    # Check for None parameters 
     
     # l_freq
     if config['param_l_freq'] == "":
@@ -310,13 +334,70 @@ def main():
     if config['param_h_freq'] == "":
         config['param_h_freq'] = None  # when App is run on Bl, no value for this parameter corresponds to ''
 
-    # picks
-    if config['param_picks'] == "":
-        config['param_picks'] = None  # when App is run on Bl, no value for this parameter corresponds to ''
+    # picks notch by channel types or names
+    if config['param_picks_by_channel_types_or_names'] == "":
+        config['param_picks_by_channel_types_or_names'] = None  # when App is run on Bl, no value for this parameter corresponds to ''
+
+    # picks notch by channel indices
+    if config['param_picks_by_channel_indices'] == "":
+        config['param_picks_by_channel_indices'] = None  # when App is run on Bl, no value for this parameter corresponds to ''
 
     # iir parameters
     if config['param_iir_params'] == "":
         config['param_iir_params'] = None  # when App is run on Bl, no value for this parameter corresponds to ''
+
+    # Deal with param_picks_by_channel_indices parameter
+
+    # When the App is run locally and on BL
+    picks = config['param_picks_by_channel_indices']
+
+    # In case of a slice
+    if isinstance(picks, str) and picks.find(",") != -1 and picks.find("[") == -1 and picks is not None:
+        picks = list(map(int, picks.split(', ')))
+        if len(picks) == 2:
+            config['param_picks_by_channel_indices'] = slice(picks[0], picks[1])
+        elif len(picks) == 3:
+            config['param_picks_by_channel_indices'] = slice(picks[0], picks[1], picks[2])
+        else:
+            value_error_message = f"If you want to select channels using a slice, you must give two or three elements."
+            raise ValueError(value_error_message)
+
+    # When the App is run on BL
+
+    # In case of a list of integers
+    if isinstance(picks, str) and picks.find(",") != -1 and picks.find("[") != -1 and picks is not None:
+        picks = picks.replace('[', '')
+        picks = picks.replace(']', '')
+        picks = picks.replace("'", '')
+        config['param_picks_by_channel_indices'] = list(map(int, picks.split(', ')))
+
+    # Deal with param_picks_by_channel_types_or_name parameter
+
+    # When the App is run on BL
+    picks = config['param_picks_by_channel_types_or_names']
+
+    # In case of a list of str
+    if isinstance(picks, str) and picks.find("[") != -1 and picks is not None:
+        picks = picks.replace('[', '')
+        picks = picks.replace(']', '')
+        picks = picks.replace("'", '')
+        config['param_picks_by_channel_types_or_names'] = list(map(str, picks.split(', ')))
+
+    # Deal with filter_length parameter on BL
+    if config['param_filter_length'] != "auto" and config['param_filter_length'].find("s") == -1:
+        config['param_filter_length'] = int(config['param_filter_length'])
+
+    # Deal with param_l_trans_bandwidth parameter on BL
+    if isintance(config['param_l_trans_bandwidth '], str) and config['param_l_trans_bandwidth '] != "auto":
+         config['param_l_trans_bandwidth '] = float(config['param_l_trans_bandwidth '])
+
+    # Deal with param_h_trans_bandwidth parameter on BL
+    if isintance(config['param_h_trans_bandwidth '], str) and config['param_h_trans_bandwidth '] != "auto":
+         config['param_h_trans_bandwidth '] = float(config['param_h_trans_bandwidth '])
+
+    # Deal with param_n_jobs parameter on BL
+    if config['param_n_jobs'] != 'cuda':
+        config['param_n_jobs']  = int(config['param_n_jobs'])
 
     # Info message about filtering
 
