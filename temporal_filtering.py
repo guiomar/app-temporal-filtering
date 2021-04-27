@@ -324,34 +324,35 @@ def main():
     if os.path.exists(events_file) is True:
         shutil.copy2(events_file, 'out_dir_temporal_filtering/events.tsv')  # required to run a pipeline on BL
 
-    # Check for None parameters 
+    # Convert all "" into None when the App runs on BL
+    tmp = dict((k, None) for k, v in config.items() if v == "")
+    config.update(tmp)
     
-    # l_freq
-    if config['param_l_freq'] == "":
-        config['param_l_freq'] = None  # when App is run on Bl, no value for this parameter corresponds to ''
+    # # l_freq
+    # if config['param_l_freq'] == "":
+    #     config['param_l_freq'] = None  # when App is run on Bl, no value for this parameter corresponds to ''
     
-    # h_freq
-    if config['param_h_freq'] == "":
-        config['param_h_freq'] = None  # when App is run on Bl, no value for this parameter corresponds to ''
+    # # h_freq
+    # if config['param_h_freq'] == "":
+    #     config['param_h_freq'] = None  # when App is run on Bl, no value for this parameter corresponds to ''
 
-    # picks notch by channel types or names
-    if config['param_picks_by_channel_types_or_names'] == "":
-        config['param_picks_by_channel_types_or_names'] = None  # when App is run on Bl, no value for this parameter corresponds to ''
+    # # picks notch by channel types or names
+    # if config['param_picks_by_channel_types_or_names'] == "":
+    #     config['param_picks_by_channel_types_or_names'] = None  # when App is run on Bl, no value for this parameter corresponds to ''
 
-    # picks notch by channel indices
-    if config['param_picks_by_channel_indices'] == "":
-        config['param_picks_by_channel_indices'] = None  # when App is run on Bl, no value for this parameter corresponds to ''
+    # # picks notch by channel indices
+    # if config['param_picks_by_channel_indices'] == "":
+    #     config['param_picks_by_channel_indices'] = None  # when App is run on Bl, no value for this parameter corresponds to ''
 
-    # iir parameters
-    if config['param_iir_params'] == "":
-        config['param_iir_params'] = None  # when App is run on Bl, no value for this parameter corresponds to ''
+    # # iir parameters
+    # if config['param_iir_params'] == "":
+    #     config['param_iir_params'] = None  # when App is run on Bl, no value for this parameter corresponds to ''
 
-    # Deal with param_picks_by_channel_indices parameter
+    ## Convert parameters ## 
 
-    # When the App is run locally and on BL
+    # Deal with param_picks_by_channel_indices parameter #
+    # Convert param_picks_by_channel_indices into slice when the App is run locally and on BL
     picks = config['param_picks_by_channel_indices']
-
-    # In case of a slice
     if isinstance(picks, str) and picks.find(",") != -1 and picks.find("[") == -1 and picks is not None:
         picks = list(map(int, picks.split(', ')))
         if len(picks) == 2:
@@ -362,44 +363,52 @@ def main():
             value_error_message = f"If you want to select channels using a slice, you must give two or three elements."
             raise ValueError(value_error_message)
 
-    # When the App is run on BL
-
-    # In case of a list of integers
+    # Convert param_picks_by_channel_indices into a list of integers when the App is run on BL
     if isinstance(picks, str) and picks.find(",") != -1 and picks.find("[") != -1 and picks is not None:
         picks = picks.replace('[', '')
         picks = picks.replace(']', '')
-        picks = picks.replace("'", '')
         config['param_picks_by_channel_indices'] = list(map(int, picks.split(', ')))
 
-    # Deal with param_picks_by_channel_types_or_name parameter
-
-    # When the App is run on BL
+    # Deal with param_picks_by_channel_types_or_name parameter #
+    # Convert param_picks_by_channel_types_or_names into a list of string when the App is run on BL
     picks = config['param_picks_by_channel_types_or_names']
-
-    # In case of a list of str
     if isinstance(picks, str) and picks.find("[") != -1 and picks is not None:
         picks = picks.replace('[', '')
         picks = picks.replace(']', '')
-        picks = picks.replace("'", '')
         config['param_picks_by_channel_types_or_names'] = list(map(str, picks.split(', ')))
 
-    # Deal with filter_length parameter on BL
+    # Deal with filter_length parameter on BL # 
+    # Convert param_filter_length into int if not auto and not a length in time when the App is run on BL
     if config['param_filter_length'] != "auto" and config['param_filter_length'].find("s") == -1:
         config['param_filter_length'] = int(config['param_filter_length'])
 
-    # Deal with param_l_trans_bandwidth parameter on BL
-    if isintance(config['param_l_trans_bandwidth '], str) and config['param_l_trans_bandwidth '] != "auto":
-         config['param_l_trans_bandwidth '] = float(config['param_l_trans_bandwidth '])
+    # Deal with param_l_trans_bandwidth parameter on BL # 
+    # Convert param_l_trans_bandwidth into a float if not auto when the App is run on BL
+    if isintance(config['param_l_trans_bandwidth'], str) and config['param_l_trans_bandwidth'] != "auto":
+         config['param_l_trans_bandwidth'] = float(config['param_l_trans_bandwidth'])
 
-    # Deal with param_h_trans_bandwidth parameter on BL
-    if isintance(config['param_h_trans_bandwidth '], str) and config['param_h_trans_bandwidth '] != "auto":
-         config['param_h_trans_bandwidth '] = float(config['param_h_trans_bandwidth '])
+    # Deal with param_h_trans_bandwidth parameter on BL #
+    # Convert param_h_trans_bandwidth into a float if not auto when the App is run on BL
+    if isintance(config['param_h_trans_bandwidth'], str) and config['param_h_trans_bandwidth'] != "auto":
+         config['param_h_trans_bandwidth'] = float(config['param_h_trans_bandwidth'])
 
-    # Deal with param_n_jobs parameter on BL
+    # Deal with param_n_jobs parameter on BL # 
+    # Convert param n jobs into an int if not cuda
     if config['param_n_jobs'] != 'cuda':
         config['param_n_jobs']  = int(config['param_n_jobs'])
 
-    # Info message about filtering
+    # Deal with skip_by_annotation parameter #
+    # Convert param_mag_scale into a list of strings when the app runs on BL
+    skip_by_an = config['param_skip_by_annotation']
+    if skip_by_an == "[]":
+        skip_by_an = []
+    elif isinstance(skip_by_an, str) and skip_by_an.find("[") != -1 and skip_by_an != "[]": 
+        skip_by_an = skip_by_an.replace('[', '')
+        skip_by_an = skip_by_an.replace(']', '')
+        skip_by_an = list(map(str, skip_by_an.split(', ')))         
+    config['param_skip_by_annotation'] = skip_by_an 
+
+    # Info message about filtering # 
 
     # Band pass filter
     if config['param_l_freq'] is not None and config['param_h_freq'] is not None:
