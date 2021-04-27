@@ -364,12 +364,12 @@ def main():
 
     # Deal with param_l_trans_bandwidth parameter on BL # 
     # Convert param_l_trans_bandwidth into a float if not auto when the App is run on BL
-    if isintance(config['param_l_trans_bandwidth'], str) and config['param_l_trans_bandwidth'] != "auto":
+    if isinstance(config['param_l_trans_bandwidth'], str) and config['param_l_trans_bandwidth'] != "auto":
          config['param_l_trans_bandwidth'] = float(config['param_l_trans_bandwidth'])
 
     # Deal with param_h_trans_bandwidth parameter on BL #
     # Convert param_h_trans_bandwidth into a float if not auto when the App is run on BL
-    if isintance(config['param_h_trans_bandwidth'], str) and config['param_h_trans_bandwidth'] != "auto":
+    if isinstance(config['param_h_trans_bandwidth'], str) and config['param_h_trans_bandwidth'] != "auto":
          config['param_h_trans_bandwidth'] = float(config['param_h_trans_bandwidth'])
 
     # Deal with param_n_jobs parameter on BL # 
@@ -388,7 +388,7 @@ def main():
         skip_by_an = list(map(str, skip_by_an.split(', ')))         
     config['param_skip_by_annotation'] = skip_by_an 
 
-    # Info message about filtering # 
+    ## Info message about filtering ## 
 
     # Band pass filter
     if config['param_l_freq'] is not None and config['param_h_freq'] is not None:
@@ -417,7 +417,8 @@ def main():
     # Keep bad channels in memory
     bad_channels = data.info['bads']
 
-    # Define kwargs
+    ## Define kwargs ##
+    
     # Delete keys values in config.json when this app is executed on Brainlife
     if '_app' and '_tid' and '_inputs' and '_outputs' in config.keys():
         del config['_app'], config['_tid'], config['_inputs'], config['_outputs'] 
