@@ -327,26 +327,6 @@ def main():
     # Convert all "" into None when the App runs on BL
     tmp = dict((k, None) for k, v in config.items() if v == "")
     config.update(tmp)
-    
-    # # l_freq
-    # if config['param_l_freq'] == "":
-    #     config['param_l_freq'] = None  # when App is run on Bl, no value for this parameter corresponds to ''
-    
-    # # h_freq
-    # if config['param_h_freq'] == "":
-    #     config['param_h_freq'] = None  # when App is run on Bl, no value for this parameter corresponds to ''
-
-    # # picks notch by channel types or names
-    # if config['param_picks_by_channel_types_or_names'] == "":
-    #     config['param_picks_by_channel_types_or_names'] = None  # when App is run on Bl, no value for this parameter corresponds to ''
-
-    # # picks notch by channel indices
-    # if config['param_picks_by_channel_indices'] == "":
-    #     config['param_picks_by_channel_indices'] = None  # when App is run on Bl, no value for this parameter corresponds to ''
-
-    # # iir parameters
-    # if config['param_iir_params'] == "":
-    #     config['param_iir_params'] = None  # when App is run on Bl, no value for this parameter corresponds to ''
 
     ## Convert parameters ## 
 
