@@ -299,6 +299,9 @@ def main():
     else:
         data = mne.read_epochs(data_file)
 
+    
+    ## Read the optional files ##
+
     # Read the crosstalk file
     cross_talk_file = config.pop('crosstalk')
     if os.path.exists(cross_talk_file) is True:
@@ -324,9 +327,11 @@ def main():
     if os.path.exists(events_file) is True:
         shutil.copy2(events_file, 'out_dir_temporal_filtering/events.tsv')  # required to run a pipeline on BL
 
+    
     # Convert all "" into None when the App runs on BL
     tmp = dict((k, None) for k, v in config.items() if v == "")
     config.update(tmp)
+
 
     ## Convert parameters ## 
 
@@ -388,6 +393,7 @@ def main():
         skip_by_an = list(map(str, skip_by_an.split(', ')))         
     config['param_skip_by_annotation'] = skip_by_an 
 
+    
     ## Info message about filtering ## 
 
     # Band pass filter
@@ -414,11 +420,12 @@ def main():
         # Raise exception
         raise ValueError(value_error_message)
 
+    
     # Keep bad channels in memory
     bad_channels = data.info['bads']
 
     ## Define kwargs ##
-    
+
     # Delete keys values in config.json when this app is executed on Brainlife
     if '_app' and '_tid' and '_inputs' and '_outputs' in config.keys():
         del config['_app'], config['_tid'], config['_inputs'], config['_outputs'] 
