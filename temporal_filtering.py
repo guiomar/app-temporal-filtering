@@ -71,7 +71,7 @@ def temporal_filtering(data, param_epoched_data, param_l_freq, param_h_freq, par
 
     Returns
     -------
-    raw_filtered: instance of mne.io.Raw or instance of mne.Epochs
+    data_filtered: instance of mne.io.Raw or instance of mne.Epochs
         The filtered data.
     """
 
@@ -150,39 +150,25 @@ def _compute_snr(meg_file):
     return snr
 
 
-def _generate_report(data_file_before, raw_before_preprocessing, raw_after_preprocessing, bad_channels,
-                     comments_about_filtering, snr_before, snr_after):
+def _generate_report(data_file_before, data_before_preprocessing, data_after_preprocessing, bad_channels,
+                     comments_about_filtering, param_epoched_data, param_l_freq, param_h_freq, 
+                     param_picks_by_channel_types_or_names, 
+                     param_filter_length, param_picks_by_channel_indices,
+                     param_l_trans_bandwidth, param_h_trans_bandwidth, param_n_jobs,
+                     param_method, param_iir_params, param_phase, param_fir_window,
+                     param_fir_design, param_skip_by_annotation, param_raw_pad, param_epoch_pad):
     # Generate a report
 
     # Instance of mne.Report
     report = mne.Report(title='Results of filtering ', verbose=True)
 
-    # Plot MEG signals in temporal domain
-    fig_raw = raw_before_preprocessing.pick(['meg'], exclude='bads').plot(duration=10, scalings='auto', butterfly=False,
-                                                                          show_scrollbars=False, proj=False)
-    fig_raw_maxfilter = raw_after_preprocessing.pick(['meg'], exclude='bads').plot(duration=10, scalings='auto',
-                                                                                   butterfly=False,
-                                                                                   show_scrollbars=False, proj=False)
+    # Put this info in html format #
 
-    # Plot power spectral density
-    fig_raw_psd = raw_before_preprocessing.plot_psd()
-    fig_raw_maxfilter_psd = raw_after_preprocessing.plot_psd()
+    # Check if MaxFilter was already applied on the data #
 
-    # Add figures to report
-    report.add_figs_to_section(fig_raw, captions='MEG signals before filtering', section='Temporal domain')
-    report.add_figs_to_section(fig_raw_maxfilter, captions='MEG signals after filtering',
-                               comments=comments_about_filtering,
-                               section='Temporal domain')
-    report.add_figs_to_section(fig_raw_psd, captions='Power spectral density before filtering',
-                               section='Frequency domain')
-    report.add_figs_to_section(fig_raw_maxfilter_psd, captions='Power spectral density after filtering',
-                               comments=comments_about_filtering,
-                               section='Frequency domain')
-
-    # Check if MaxFilter was already applied on the data
-    if raw_before_preprocessing.info['proc_history']:
-        sss_info = raw_before_preprocessing.info['proc_history'][0]['max_info']['sss_info']
-        tsss_info = raw_before_preprocessing.info['proc_history'][0]['max_info']['max_st']
+    if data_before_preprocessing.info['proc_history']:
+        sss_info = data_before_preprocessing.info['proc_history'][0]['max_info']['sss_info']
+        tsss_info = data_before_preprocessing.info['proc_history'][0]['max_info']['max_st']
         if bool(sss_info) or bool(tsss_info) is True:
             message_channels = f'Bad channels have been interpolated during MaxFilter'
         else:
@@ -190,14 +176,12 @@ def _generate_report(data_file_before, raw_before_preprocessing, raw_after_prepr
     else:
         message_channels = bad_channels
 
-    # Put this info in html format
     # Give some info about the file before preprocessing
-    sampling_frequency = raw_before_preprocessing.info['sfreq']
-    highpass = raw_before_preprocessing.info['highpass']
-    lowpass = raw_before_preprocessing.info['lowpass']
+    sampling_frequency = data_before_preprocessing.info['sfreq']
+    highpass = data_before_preprocessing.info['highpass']
+    lowpass = data_before_preprocessing.info['lowpass']
 
-    # Put this info in html format
-    # Info on data
+    # Info on data #
     html_text_info = f"""<html>
 
         <head>
@@ -229,31 +213,88 @@ def _generate_report(data_file_before, raw_before_preprocessing, raw_after_prepr
 
         </html>"""
 
-    # Info on SNR
-    html_text_snr = f"""<html>
+    # Add html to reports
+    report.add_htmls_to_section(html_text_info, captions='MEG recording features', section='Data info', replace=False)
 
-    <head>
-        <style type="text/css">
-            table {{ border-collapse: collapse;}}
-            td {{ text-align: center; border: 1px solid #000000; border-style: dashed; font-size: 15px; }}
-        </style>
-    </head>
+    ## Plot figures for raw data ##
+    if param_epoched_data is False:
 
-    <body>
-        <table width="50%" height="80%" border="2px">
-            <tr>
-                <td>SNR before filtering: {snr_before}</td>
-            </tr>
-            <tr>
-                <td>SNR after filtering: {snr_after}</td>
-            </tr>
-        </table>
-    </body>
+        # Plot MEG signals in temporal domain
+        fig_raw = data_before_preprocessing.pick(['meg'], exclude='bads').plot(duration=10, scalings='auto', butterfly=False,
+                                                                               show_scrollbars=False, proj=False)
+        fig_raw_filtered = data_after_preprocessing.pick(['meg'], exclude='bads').plot(duration=10, scalings='auto',
+                                                                                        butterfly=False,
+                                                                                        show_scrollbars=False, proj=False)
 
-    </html>"""
+        # Plot power spectral density
+        fig_raw_psd = data_before_preprocessing.plot_psd()
+        fig_raw_filtered_psd = data_after_preprocessing.plot_psd()
 
-    # Info on SNR
-    html_text_summary_filtering = f"""<html>
+        # Add figures to report
+        report.add_figs_to_section(fig_raw, captions='MEG signals before filtering', section='Temporal domain')
+        report.add_figs_to_section(fig_raw_filtered, captions='MEG signals after filtering',
+                                   comments=comments_about_filtering,
+                                   section='Temporal domain')
+        report.add_figs_to_section(fig_raw_psd, captions='Power spectral density before filtering',
+                                   section='Frequency domain')
+        report.add_figs_to_section(fig_raw_filtered_psd, captions='Power spectral density after filtering',
+                                   comments=comments_about_filtering,
+                                   section='Frequency domain')
+
+        param_pad = param_raw_pad
+
+    ## Plot figures for epoched data ##
+    else:
+
+        # Plot MEG signals in temporal domain
+        fig_epoch = data_before_preprocessing.plot(picks='meg', scalings="auto", butterfly=False, show_scrollbars=False)
+        fig_epoch_filtered = data_after_preprocessing.plot(picks='meg', scalings="auto", butterfly=False, show_scrollbars=False)
+
+        # Plot power spectral density
+        fig_epoch_psd = data_before_preprocessing.plot_psd(picks='meg')
+        fig_epoch_filtered_psd = data_after_preprocessing.plot_psd(picks='meg')
+
+        # Add figures to report
+        report.add_figs_to_section(fig_epoch, captions='MEG signals before filtering', section='Temporal domain')
+        report.add_figs_to_section(fig_epoch_filtered, captions='MEG signals after filtering',
+                                   comments=comments_about_filtering,
+                                   section='Temporal domain')
+        report.add_figs_to_section(fig_epoch_psd, captions='Power spectral density before filtering',
+                                   section='Frequency domain')
+        report.add_figs_to_section(fig_epoch_filtered_psd, captions='Power spectral density after filtering',
+                                   comments=comments_about_filtering,
+                                   section='Frequency domain')
+
+        param_pad = param_epoch_pad
+
+    # # Info on SNR
+    # html_text_snr = f"""<html>
+
+    # <head>
+    #     <style type="text/css">
+    #         table {{ border-collapse: collapse;}}
+    #         td {{ text-align: center; border: 1px solid #000000; border-style: dashed; font-size: 15px; }}
+    #     </style>
+    # </head>
+
+    # <body>
+    #     <table width="50%" height="80%" border="2px">
+    #         <tr>
+    #             <td>SNR before filtering: {snr_before}</td>
+    #         </tr>
+    #         <tr>
+    #             <td>SNR after filtering: {snr_after}</td>
+    #         </tr>
+    #     </table>
+    # </body>
+
+    # </html>"""
+
+    ## Values of the parameters of the App ## 
+    mne_version = mne.__version__
+
+    # Put this info in html format # 
+    html_text_parameters = f"""<html>
 
     <head>
         <style type="text/css">
@@ -267,17 +308,58 @@ def _generate_report(data_file_before, raw_before_preprocessing, raw_after_prepr
             <tr>
                 <td>Temporal filtering: {comments_about_filtering}</td>
             </tr>
+            <tr>
+                <td>Types or names of channels to include: {param_picks_by_channel_types_or_names}</td>
+            </tr>
+            <tr>
+                <td>Indices of channels to include: {param_picks_by_channel_indices}</td>
+            </tr>
+            <tr>
+                <td>Filter length: {param_filter_length}</td>
+            </tr>
+            <tr>
+                <td>Width of the transition band at the low cut-off frequency: {param_l_trans_bandwidth}</td>
+            </tr>
+            <tr>
+                <td>Width of the transition band at the high cut-off frequency: {param_l_trans_bandwidth}</td>
+            </tr>
+            <tr>
+                <td>Number of jobs to run in parallel: {param_n_jobs}</td>
+            </tr>
+            <tr>
+                <td>Method: {param_method}</td>
+            </tr>
+            <tr>
+                <td>IIR parameters: {param_iir_params}</td>
+            </tr>
+            <tr>
+                <td>Phase: {param_phase}</td>
+            </tr>
+            <tr>
+                <td>FIR window: {param_fir_window}</td>
+            </tr>
+            <tr>
+                <td>FIR design: {param_fir_design}</td>
+            </tr>
+            <tr>
+                <td>Skip by annotation: {param_skip_by_annotation}</td>
+            </tr>
+            <tr>
+                <td>Type of padding: {param_pad}</td>
+            </tr>
+            <tr>
+                <td>MNE version used: {mne_version}</td>
+            </tr>
         </table>
     </body>
 
     </html>"""
 
-    # Add html to reports
-    report.add_htmls_to_section(html_text_info, captions='MEG recording features', section='Data info', replace=False)
-    report.add_htmls_to_section(html_text_summary_filtering, captions='Summary filtering applied',
+    # Add html to report
+    report.add_htmls_to_section(html_text_parameters , captions='Summary filtering applied',
                                 section='Filtering info', replace=False)
-    report.add_htmls_to_section(html_text_snr, captions='Signal to noise ratio', section='Signal to noise ratio',
-                                replace=False)
+    # report.add_htmls_to_section(html_text_snr, captions='Signal to noise ratio', section='Signal to noise ratio',
+    #                             replace=False)
 
     # Save report
     report.save('out_dir_report/report_filtering.html', overwrite=True)
@@ -444,7 +526,7 @@ def main():
     #snr_after = _compute_snr(data_filtered)
 
     # Generate a report
-    #_generate_report(data_file, data, data_filtered, bad_channels, comments_about_filtering, snr_before, snr_after)
+    _generate_report(data_file, data, data_filtered, bad_channels, comments_about_filtering, **kwargs)
 
     # Save the dict_json_product in a json file
     with open('product.json', 'w') as outfile:
