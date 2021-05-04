@@ -197,6 +197,9 @@ def _generate_report(data_file_before, data_before_preprocessing, data_after_pre
                     <td>Input file: {data_file_before}</td>
                 </tr>
                 <tr>
+                    <td>Epoched data: {param_epoched_data}</td>
+                </tr>
+                <tr>
                     <td>Bad channels: {message_channels}</td>
                 </tr>
                 <tr>
@@ -216,23 +219,31 @@ def _generate_report(data_file_before, data_before_preprocessing, data_after_pre
     # Add html to reports
     report.add_htmls_to_section(html_text_info, captions='MEG recording features', section='Data info', replace=False)
 
+    # Define param_picks
+    if param_picks_by_channel_types_or_names is None and param_picks_by_channel_indices is not None:
+        param_picks = param_picks_by_channel_indices
+    elif param_picks_by_channel_types_or_names is not None and param_picks_by_channel_indices is None:
+        param_picks = param_picks_by_channel_types_or_names
+    else:
+        param_picks = None    
+
     ## Plot figures for raw data ##
     if param_epoched_data is False:
 
         # Plot MEG signals in temporal domain
-        fig_raw = data_before_preprocessing.pick(['meg'], exclude='bads').plot(duration=10, scalings='auto', butterfly=False,
-                                                                               show_scrollbars=False, proj=False)
-        fig_raw_filtered = data_after_preprocessing.pick(['meg'], exclude='bads').plot(duration=10, scalings='auto',
-                                                                                        butterfly=False,
-                                                                                        show_scrollbars=False, proj=False)
+        fig_raw = data_before_preprocessing.pick(param_picks, exclude='bads').plot(duration=10, scalings='auto', butterfly=False,
+                                                                                   show_scrollbars=False, proj=False)
+        fig_raw_filtered = data_after_preprocessing.pick(param_picks, exclude='bads').plot(duration=10, scalings='auto',
+                                                                                           butterfly=False,
+                                                                                           show_scrollbars=False, proj=False)
 
         # Plot power spectral density
-        fig_raw_psd = data_before_preprocessing.plot_psd()
-        fig_raw_filtered_psd = data_after_preprocessing.plot_psd()
+        fig_raw_psd = data_before_preprocessing.plot_psd(picks=param_picks)
+        fig_raw_filtered_psd = data_after_preprocessing.plot_psd(picks=param_picks)
 
         # Add figures to report
-        report.add_figs_to_section(fig_raw, captions='MEG signals before filtering', section='Temporal domain')
-        report.add_figs_to_section(fig_raw_filtered, captions='MEG signals after filtering',
+        report.add_figs_to_section(fig_raw, captions='Signals before filtering', section='Temporal domain')
+        report.add_figs_to_section(fig_raw_filtered, captions='Signals after filtering',
                                    comments=comments_about_filtering,
                                    section='Temporal domain')
         report.add_figs_to_section(fig_raw_psd, captions='Power spectral density before filtering',
@@ -247,16 +258,16 @@ def _generate_report(data_file_before, data_before_preprocessing, data_after_pre
     else:
 
         # Plot MEG signals in temporal domain
-        fig_epoch = data_before_preprocessing.plot(picks='meg', scalings="auto", butterfly=False, show_scrollbars=False)
-        fig_epoch_filtered = data_after_preprocessing.plot(picks='meg', scalings="auto", butterfly=False, show_scrollbars=False)
+        fig_epoch = data_before_preprocessing.plot(picks=param_picks, scalings="auto", butterfly=False, show_scrollbars=False)
+        fig_epoch_filtered = data_after_preprocessing.plot(picks=param_picks, scalings="auto", butterfly=False, show_scrollbars=False)
 
         # Plot power spectral density
-        fig_epoch_psd = data_before_preprocessing.plot_psd(picks='meg')
-        fig_epoch_filtered_psd = data_after_preprocessing.plot_psd(picks='meg')
+        fig_epoch_psd = data_before_preprocessing.plot_psd(picks=param_picks)
+        fig_epoch_filtered_psd = data_after_preprocessing.plot_psd(picks=param_picks)
 
         # Add figures to report
-        report.add_figs_to_section(fig_epoch, captions='MEG signals before filtering', section='Temporal domain')
-        report.add_figs_to_section(fig_epoch_filtered, captions='MEG signals after filtering',
+        report.add_figs_to_section(fig_epoch, captions='Signals before filtering', section='Temporal domain')
+        report.add_figs_to_section(fig_epoch_filtered, captions='Signals after filtering',
                                    comments=comments_about_filtering,
                                    section='Temporal domain')
         report.add_figs_to_section(fig_epoch_psd, captions='Power spectral density before filtering',
