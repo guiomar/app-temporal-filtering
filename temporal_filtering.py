@@ -217,7 +217,7 @@ def _generate_report(data_file_before, data_before_preprocessing, data_after_pre
         </html>"""
 
     # Add html to reports
-    report.add_htmls_to_section(html_text_info, captions='MEG recording features', section='Data info', replace=False)
+    report.add_htmls_to_section(html_text_info, captions='Data recording features', section='Data info', replace=False)
 
     # Define param_picks
     if param_picks_by_channel_types_or_names is None and param_picks_by_channel_indices is not None:
