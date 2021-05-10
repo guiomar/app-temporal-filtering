@@ -421,7 +421,7 @@ def main():
 
     # Read events file 
     events_file = config.pop('events')
-    if events is not None:
+    if events_file is not None:
         if os.path.exists(events_file) is True:
             shutil.copy2(events_file, 'out_dir_temporal_filtering/events.tsv')  # required to run a pipeline on BL
 
