@@ -4,7 +4,7 @@ import json
 import mne
 import numpy as np
 import os
-import shutils
+import shutil
 import pandas as pd
 
 
