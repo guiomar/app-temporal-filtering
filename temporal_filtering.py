@@ -6,6 +6,7 @@ import numpy as np
 import os
 import shutil
 import pandas as pd
+import helper
 
 
 def temporal_filtering(data, param_epoched_data, param_l_freq, param_h_freq, param_picks_by_channel_types_or_names, 
@@ -394,63 +395,66 @@ def main():
         data = mne.read_epochs(data_file)
 
     
-    ## Read the optional files ##
+    # ## Read the optional files ##
 
-    # Read the crosstalk file
-    cross_talk_file = config.pop('crosstalk')
-    if cross_talk_file is not None:
-        if os.path.exists(cross_talk_file) is True:
-            shutil.copy2(cross_talk_file, 'out_dir_temporal_filtering/crosstalk_meg.fif')  # required to run a pipeline on BL
+    # # Read the crosstalk file
+    # cross_talk_file = config.pop('crosstalk')
+    # if cross_talk_file is not None:
+    #     if os.path.exists(cross_talk_file) is True:
+    #         shutil.copy2(cross_talk_file, 'out_dir_temporal_filtering/crosstalk_meg.fif')  # required to run a pipeline on BL
 
-    # Read the calibration file
-    calibration_file = config.pop('calibration')
-    if calibration_file is not None:
-        if os.path.exists(calibration_file) is True:
-            shutil.copy2(calibration_file, 'out_dir_temporal_filtering/calibration_meg.dat')  # required to run a pipeline on BL
+    # # Read the calibration file
+    # calibration_file = config.pop('calibration')
+    # if calibration_file is not None:
+    #     if os.path.exists(calibration_file) is True:
+    #         shutil.copy2(calibration_file, 'out_dir_temporal_filtering/calibration_meg.dat')  # required to run a pipeline on BL
 
-    # Read destination file 
-    destination_file = config.pop('destination')
-    if destination_file is not None:
-        if os.path.exists(destination_file) is True:
-            shutil.copy2(destination_file, 'out_dir_temporal_filtering/destination.fif')  # required to run a pipeline on BL
+    # # Read destination file 
+    # destination_file = config.pop('destination')
+    # if destination_file is not None:
+    #     if os.path.exists(destination_file) is True:
+    #         shutil.copy2(destination_file, 'out_dir_temporal_filtering/destination.fif')  # required to run a pipeline on BL
 
-    # Read head pos file
-    head_pos = config.pop('headshape')
-    if head_pos is not None:
-        if os.path.exists(head_pos) is True:
-            shutil.copy2(head_pos, 'out_dir_temporal_filtering/headshape.pos')  # required to run a pipeline on BL
+    # # Read head pos file
+    # head_pos = config.pop('headshape')
+    # if head_pos is not None:
+    #     if os.path.exists(head_pos) is True:
+    #         shutil.copy2(head_pos, 'out_dir_temporal_filtering/headshape.pos')  # required to run a pipeline on BL
 
-    # Read events file 
-    events_file = config.pop('events')
-    if events_file is not None:
-        if os.path.exists(events_file) is True:
-            shutil.copy2(events_file, 'out_dir_temporal_filtering/events.tsv')  # required to run a pipeline on BL
+    # # Read events file 
+    # events_file = config.pop('events')
+    # if events_file is not None:
+    #     if os.path.exists(events_file) is True:
+    #         shutil.copy2(events_file, 'out_dir_temporal_filtering/events.tsv')  # required to run a pipeline on BL
 
-    # Read channels file 
-    channels_file = config.pop('channels')
-    if channels_file is not None:
-        if os.path.exists(channels_file):
-            shutil.copy2(channels_file, 'out_dir_temporal_filtering/channels.tsv')  # required to run a pipeline on BL
-            df_channels = pd.read_csv(channels_file, sep='\t')
-            # Select bad channels' name
-            bad_channels = df_channels[df_channels["status"] == "bad"]['name']
-            bad_channels = list(bad_channels.values)
-            # Put channels.tsv bad channels in data.info['bads']
-            data.info['bads'].sort() 
-            bad_channels.sort()
-            # Warning message
-            if data.info['bads'] != bad_channels:
-                user_warning_message_channels = f'Bad channels from the info of your data file are different from ' \
-                                                f'those in the channels.tsv file. By default, only bad channels from channels.tsv ' \
-                                                f'are considered as bad: the info of your data file is updated with those channels.'
-                warnings.warn(user_warning_message_channels)
-                dict_json_product['brainlife'].append({'type': 'warning', 'msg': user_warning_message_channels})
-                data.info['bads'] = bad_channels
+    # # Read channels file 
+    # channels_file = config.pop('channels')
+    # if channels_file is not None:
+    #     if os.path.exists(channels_file):
+    #         shutil.copy2(channels_file, 'out_dir_temporal_filtering/channels.tsv')  # required to run a pipeline on BL
+    #         df_channels = pd.read_csv(channels_file, sep='\t')
+    #         # Select bad channels' name
+    #         bad_channels = df_channels[df_channels["status"] == "bad"]['name']
+    #         bad_channels = list(bad_channels.values)
+    #         # Put channels.tsv bad channels in data.info['bads']
+    #         data.info['bads'].sort() 
+    #         bad_channels.sort()
+    #         # Warning message
+    #         if data.info['bads'] != bad_channels:
+    #             user_warning_message_channels = f'Bad channels from the info of your data file are different from ' \
+    #                                             f'those in the channels.tsv file. By default, only bad channels from channels.tsv ' \
+    #                                             f'are considered as bad: the info of your data file is updated with those channels.'
+    #             warnings.warn(user_warning_message_channels)
+    #             dict_json_product['brainlife'].append({'type': 'warning', 'msg': user_warning_message_channels})
+    #             data.info['bads'] = bad_channels
 
     
-    # Convert all "" into None when the App runs on BL
-    tmp = dict((k, None) for k, v in config.items() if v == "")
-    config.update(tmp)
+    # # Convert all "" into None when the App runs on BL
+    # tmp = dict((k, None) for k, v in config.items() if v == "")
+    # config.update(tmp)
+
+    config, cross_talk_file, calibration_file, events_file, head_pos_file, channels_file, destination = helper.read_optional_files(config, 'out_dir_temporal_filtering')
+    config = helper.convert_parameters_to_None(config)
 
 
     ## Convert parameters ## 
@@ -520,25 +524,39 @@ def main():
     if config['param_l_freq'] is not None and config['param_h_freq'] is not None:
         comments_about_filtering = f'Data was filtered between ' \
                                    f'{config["param_l_freq"]} ' \
-                                   f'and {config["param_h_freq"]}Hz'
+                                   f'and {config["param_h_freq"]}Hz.'
         dict_json_product['brainlife'].append({'type': 'info', 'msg': comments_about_filtering})
 
     # Lowpass filter
     elif config['param_l_freq'] is None and config['param_h_freq'] is not None:
-        comments_about_filtering = f'Lowpass filter was applied at {config["param_h_freq"]}Hz'
+        comments_about_filtering = f'Lowpass filter was applied at {config["param_h_freq"]}Hz.'
         dict_json_product['brainlife'].append({'type': 'info', 'msg': comments_about_filtering})
 
     # Highpass filter
     elif config['param_l_freq'] is not None and config['param_h_freq'] is None:
-        comments_about_filtering = f'Highpass filter was applied at {config["param_l_freq"]}Hz'
+        comments_about_filtering = f'Highpass filter was applied at {config["param_l_freq"]}Hz.'
         dict_json_product['brainlife'].append({'type': 'info', 'msg': comments_about_filtering})
 
     # Raise an exception if both param_filter_l_freq and param_filter_h_freq are None
     elif config['param_l_freq'] is None and config["param_h_freq"] is None:
         value_error_message = f'You must specify a value for param_l_freq or param_h_freq, ' \
-                              f"they can't both be set to None"
+                              f"they can't both be set to None."
         # Raise exception
         raise ValueError(value_error_message)
+
+
+    # Channels.tsv must be BIDS compliant
+    if channels_file is not None:
+        user_warning_message_channels = f'The channels file provided must be ' \
+                                        f'BIDS compliant and the column "status" must be present. ' 
+        warnings.warn(user_warning_message_channels)
+        dict_json_product['brainlife'].append({'type': 'warning', 'msg': user_warning_message_channels})
+
+        raw, user_warning_message_channels = helper.update_data_info_bads(raw, channels_file)
+        if user_warning_message_channels is not None: 
+            warnings.warn(user_warning_message_channels)
+            dict_json_product['brainlife'].append({'type': 'warning', 'msg': user_warning_message_channels})
+
 
     
     # Keep bad channels in memory
@@ -547,8 +565,9 @@ def main():
     ## Define kwargs ##
 
     # Delete keys values in config.json when this app is executed on Brainlife
-    if '_app' and '_tid' and '_inputs' and '_outputs' in config.keys():
-        del config['_app'], config['_tid'], config['_inputs'], config['_outputs'] 
+    # if '_app' and '_tid' and '_inputs' and '_outputs' in config.keys():
+    #     del config['_app'], config['_tid'], config['_inputs'], config['_outputs'] 
+    config = helper.define_kwargs(config)
     kwargs = config  
 
     # Apply temporal filtering
