@@ -13,7 +13,8 @@ Repository of a Brainlife App that filters raw or epoched MEG signals using the 
     * an optional crosstalk compensation file in `.fif`,
     * an optional head position file in `.pos`,
     * an optional destination file in `.fif`,
-    * an optional event file in `.tsv`.
+    * an optional events file in `.tsv`,
+    * an optional channels file in `.tsv`.
 4) Input parameters are:
     * `param_epoched_data`: `bool`, if True, the data to be filtered is epoched, else it is continuous. Default is False.
     * l_freq: `float`, optional, for FIR filters, the lower pass-band edge; for IIR filters, the lower cutoff frequency. If `None` the data are only low-passed.

@@ -5,7 +5,7 @@
     "headshape": null,
     "destination": null,
     "events": "/network/lustre/iss01/home/aurore.bussalb/Repositories/app-create-events/out_dir_create_events/events.tsv",
-	"channels": null,
+    "channels": null,
     "param_epoched_data": true,
     "param_l_freq": 0.5,
     "param_h_freq": 150,
