@@ -234,14 +234,15 @@ def _generate_report(data_file_before, data_before_preprocessing, data_after_pre
 
         # Plot MEG signals in temporal domain
         fig_raw = data_before_preprocessing.pick(param_picks, exclude='bads').plot(duration=10, scalings='auto', butterfly=False,
-                                                                                   show_scrollbars=False, proj=False)
+                                                                                   show_scrollbars=False, proj=False, show=False)
         fig_raw_filtered = data_after_preprocessing.pick(param_picks, exclude='bads').plot(duration=10, scalings='auto',
                                                                                            butterfly=False,
-                                                                                           show_scrollbars=False, proj=False)
+                                                                                           show_scrollbars=False, 
+                                                                                           proj=False, show=False)
 
         # Plot power spectral density
-        fig_raw_psd = data_before_preprocessing.plot_psd(picks=param_picks)
-        fig_raw_filtered_psd = data_after_preprocessing.plot_psd(picks=param_picks)
+        fig_raw_psd = data_before_preprocessing.plot_psd(picks=param_picks, show=False)
+        fig_raw_filtered_psd = data_after_preprocessing.plot_psd(picks=param_picks, show=False)
 
         # Add figures to report
         report.add_figs_to_section(fig_raw, captions='Signals before filtering', section='Temporal domain')
@@ -260,12 +261,12 @@ def _generate_report(data_file_before, data_before_preprocessing, data_after_pre
     else:
 
         # Plot MEG signals in temporal domain
-        fig_epoch = data_before_preprocessing.plot(picks=param_picks, scalings="auto", butterfly=False, show_scrollbars=False)
-        fig_epoch_filtered = data_after_preprocessing.plot(picks=param_picks, scalings="auto", butterfly=False, show_scrollbars=False)
+        fig_epoch = data_before_preprocessing.plot(picks=param_picks, scalings="auto", butterfly=False, show_scrollbars=False, show=False)
+        fig_epoch_filtered = data_after_preprocessing.plot(picks=param_picks, scalings="auto", butterfly=False, show_scrollbars=False, show=False)
 
         # Plot power spectral density
-        fig_epoch_psd = data_before_preprocessing.plot_psd(picks=param_picks)
-        fig_epoch_filtered_psd = data_after_preprocessing.plot_psd(picks=param_picks)
+        fig_epoch_psd = data_before_preprocessing.plot_psd(picks=param_picks, show=False)
+        fig_epoch_filtered_psd = data_after_preprocessing.plot_psd(picks=param_picks, show=False)
 
         # Add figures to report
         report.add_figs_to_section(fig_epoch, captions='Signals before filtering', section='Temporal domain')
