@@ -6,7 +6,7 @@ import numpy as np
 import os
 import shutil
 import pandas as pd
-import helper
+from brainlife_apps_helper import helper
 
 
 def temporal_filtering(data, param_epoched_data, param_l_freq, param_h_freq, param_picks_by_channel_types_or_names, 
