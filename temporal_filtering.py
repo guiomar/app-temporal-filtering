@@ -471,16 +471,19 @@ def main():
                                    f'{config["param_l_freq"]} ' \
                                    f'and {config["param_h_freq"]}Hz.'
         dict_json_product['brainlife'].append({'type': 'info', 'msg': comments_about_filtering})
+        filter_type = "band-pass"
 
     # Lowpass filter
     elif config['param_l_freq'] is None and config['param_h_freq'] is not None:
         comments_about_filtering = f'Lowpass filter was applied at {config["param_h_freq"]}Hz.'
         dict_json_product['brainlife'].append({'type': 'info', 'msg': comments_about_filtering})
+        filter_type = "low-pass"
 
     # Highpass filter
     elif config['param_l_freq'] is not None and config['param_h_freq'] is None:
         comments_about_filtering = f'Highpass filter was applied at {config["param_l_freq"]}Hz.'
         dict_json_product['brainlife'].append({'type': 'info', 'msg': comments_about_filtering})
+        filter_type = "high-pass"
 
     # Raise an exception if both param_filter_l_freq and param_filter_h_freq are None
     elif config['param_l_freq'] is None and config["param_h_freq"] is None:
@@ -488,6 +491,27 @@ def main():
                               f"they can't both be set to None."
         # Raise exception
         raise ValueError(value_error_message)
+
+    
+    ## Update meg.json ##
+
+    # Extract or write meg.json
+    if meg_json_file is not None:
+        with open(meg_json_file) as meg_json:
+            meg_json = json.load(meg_json_file)
+    else:
+        meg_json = helper.create_meg_json(raw)
+
+    # Update the meg.json
+    meg_json["FilterType"] = f"{filter_type} {config['param_method']}"  
+    meg_json["HighCutoff"] = f"{config["param_h_freq"]}"
+    meg_json["LowCutoff"] = f"{config["param_l_freq"]}"
+    meg_json["FilterLength"] = f"{config["param_filter_length"]}"
+
+    # Save the meg_json in a json file
+    with open('out_dir_notch_filter/meg.json', 'w') as outfile_meg:
+        json.dump(meg_json, outfile_meg)
+
 
 
     # Channels.tsv must be BIDS compliant
