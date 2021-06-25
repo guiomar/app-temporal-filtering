@@ -23,25 +23,4 @@
     "param_skip_by_annotation": ["edge", "bad_acq_skip"],
     "param_raw_pad": "reflect_limited",
     "param_epoch_pad": "edge",
-    "_inputs": [
-        {
-            "id": "fif file",
-            "task_id": "60c31fe34b696816470f2e04",
-            "subdir": "6065c464d040084d88b0a420",
-            "meta": {
-                "subject": "rest1-raw"
-            },
-            "tags": [],
-            "datatype": "6000737faacf9ee51fa691cb",
-            "datatype_tags": [],
-            "keys": [
-                "fif",
-                "calibration",
-                "crosstalk",
-                "channels",
-                "headshape"
-            ],
-            "project": "5ff32b04116c5cbba4d1929b",
-            "dataset_id": "6065c464d040084d88b0a420"
-        }
 }
