@@ -524,7 +524,7 @@ def main():
     #snr_after = _compute_snr(data_filtered)
 
     # Generate a report
-    #_generate_report(data_file, data, data_filtered, bad_channels, comments_about_filtering, **kwargs)
+    _generate_report(data_file, data, data_filtered, bad_channels, comments_about_filtering, **kwargs)
 
     # Save the dict_json_product in a json file
     with open('product.json', 'w') as outfile:
