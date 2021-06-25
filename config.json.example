@@ -3,9 +3,9 @@
     "calibration": "/network/lustre/iss01/home/aurore.bussalb/Repositories/data_test_BL/sss_cal.dat",
     "crosstalk": "/network/lustre/iss01/home/aurore.bussalb/Repositories/data_test_BL/ct_sparse.fif",
     "headshape": null,
-    "destination": null,
-    "events": "/network/lustre/iss01/home/aurore.bussalb/Repositories/app-create-events/out_dir_create_events/events.tsv",
-    "channels": null,
+    "destination": "/network/lustre/iss01/home/aurore.bussalb/Repositories/app-mean-transformation-matrix/out_dir/destination.fif",
+    "events": "/network/lustre/iss01/home/aurore.bussalb/Repositories/app-create-events/out_dir_get_events/events.tsv",
+    "channels": "/network/lustre/iss01/home/aurore.bussalb/Repositories/app-bad-channels/out_dir_bad_channels/channels.tsv",
     "param_epoched_data": true,
     "param_l_freq": 0.5,
     "param_h_freq": 150,
@@ -22,5 +22,26 @@
     "param_fir_design": "firwin",
     "param_skip_by_annotation": ["edge", "bad_acq_skip"],
     "param_raw_pad": "reflect_limited",
-    "param_epoch_pad": "edge"
+    "param_epoch_pad": "edge",
+    "_inputs": [
+        {
+            "id": "fif file",
+            "task_id": "60c31fe34b696816470f2e04",
+            "subdir": "6065c464d040084d88b0a420",
+            "meta": {
+                "subject": "rest1-raw"
+            },
+            "tags": [],
+            "datatype": "6000737faacf9ee51fa691cb",
+            "datatype_tags": [],
+            "keys": [
+                "fif",
+                "calibration",
+                "crosstalk",
+                "channels",
+                "headshape"
+            ],
+            "project": "5ff32b04116c5cbba4d1929b",
+            "dataset_id": "6065c464d040084d88b0a420"
+        }
 }

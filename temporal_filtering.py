@@ -4,8 +4,8 @@ import json
 import mne
 import numpy as np
 import os
-import shutil
 import pandas as pd
+import warnings
 from brainlife_apps_helper import helper
 
 
@@ -492,36 +492,14 @@ def main():
         # Raise exception
         raise ValueError(value_error_message)
 
-    
-    ## Update meg.json ##
-
-    # Extract or write meg.json
-    if meg_json_file is not None:
-        with open(meg_json_file) as meg_json:
-            meg_json = json.load(meg_json_file)
-    else:
-        meg_json = helper.create_meg_json(raw)
-
-    # Update the meg.json
-    meg_json["FilterType"] = f"{filter_type} {config['param_method']}"  
-    meg_json["HighCutoff"] = f"{config["param_h_freq"]}"
-    meg_json["LowCutoff"] = f"{config["param_l_freq"]}"
-    meg_json["FilterLength"] = f"{config["param_filter_length"]}"
-
-    # Save the meg_json in a json file
-    with open('out_dir_notch_filter/meg.json', 'w') as outfile_meg:
-        json.dump(meg_json, outfile_meg)
-
-
-
     # Channels.tsv must be BIDS compliant
     if channels_file is not None:
         user_warning_message_channels = f'The channels file provided must be ' \
                                         f'BIDS compliant and the column "status" must be present. ' 
         warnings.warn(user_warning_message_channels)
         dict_json_product['brainlife'].append({'type': 'warning', 'msg': user_warning_message_channels})
-        # Udpate raw.info['bads'] with info contained in channels.tsv
-        raw, user_warning_message_channels = helper.update_data_info_bads(raw, channels_file)
+        # Udpate data.info['bads'] with info contained in channels.tsv
+        data, user_warning_message_channels = helper.update_data_info_bads(data, channels_file)
         if user_warning_message_channels is not None: 
             warnings.warn(user_warning_message_channels)
             dict_json_product['brainlife'].append({'type': 'warning', 'msg': user_warning_message_channels})
@@ -546,7 +524,7 @@ def main():
     #snr_after = _compute_snr(data_filtered)
 
     # Generate a report
-    _generate_report(data_file, data, data_filtered, bad_channels, comments_about_filtering, **kwargs)
+    #_generate_report(data_file, data, data_filtered, bad_channels, comments_about_filtering, **kwargs)
 
     # Save the dict_json_product in a json file
     with open('product.json', 'w') as outfile:
