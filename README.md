@@ -7,7 +7,7 @@ Repository of a Brainlife App that filters raw or epoched MEG signals using the 
 
 1) Filter MEG signals
 2) Apply a bandpass, highpass, or lowpass filter
-3) Input file is:
+3) Input file are:
     * a MEG file in `.fif` format,
     * an optional fine calibration file in `.dat`,
     * an optional crosstalk compensation file in `.fif`,
