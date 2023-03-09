@@ -46,8 +46,8 @@ This list along with the parameters' default values correspond to the 0.22.0 ver
 - [Aurore Bussalb](aurore.bussalb@icm-institute.org)
 
 ### Contributors
-- [Aurore Bussalb](aurore.bussalb@icm-institute.org)
 - [Maximilien Chaumon](maximilien.chaumon@icm-institute.org)
+- [Guiomar Niso](guiomar.niso@ctb.upm.es)
 
 ### Funding Acknowledgement
 brainlife.io is publicly funded and for the sustainability of the project it is helpful to Acknowledge the use of the platform. We kindly ask that you acknowledge the funding below in your code and publications. Copy and past the following lines into your repository when using this code.
